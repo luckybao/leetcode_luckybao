@@ -1,0 +1,80 @@
+Symmetric Tree Total Accepted: 15729 Total Submissions: 49435 My Submissions
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree is symmetric:
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+But the following is not:
+    1
+   / \
+  2   2
+   \   \
+   3    3
+   
+  /**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ *///
+ //recursive solution
+public class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if(root==null){return true;}
+       return isSymmetric(root.right, root.left);
+    }
+    public boolean isSymmetric(TreeNode r, TreeNode l){
+        if(r!=null&&l==null) return false;
+        if(r==null&&l!=null) return false;
+        return (r==null&&l==null)||((r.val==l.val)&&isSymmetric(r.left,l.right)&&isSymmetric(r.right,l.left));
+    }
+}
+
+//iterative
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if(root==null)return true;
+        Queue<TreeNode> helper=new LinkedList<TreeNode>();
+        if(root.left!=null&&root.right==null)return false;
+        if(root.right!=null&&root.left==null)return false;
+        if(root.right==null&&root.left==null)return true;
+        if(root.right.val!=root.left.val)return false;
+        helper.add(root.left);
+            helper.add(root.right);
+        while(!helper.isEmpty()){
+            TreeNode topl, topr;
+            topl=helper.poll();
+            topr=helper.poll();
+            if(topl.left!=null&&topr.right==null)return false;
+        if(topr.right!=null&&topl.left==null)return false;
+        if(topr.right!=null&&topl.left!=null)
+        {if(topr.right.val!=topl.left.val)return false;
+            if(topl.left.val==topr.right.val){
+            helper.add(topl.left);
+            helper.add(topr.right);}}
+            if(topr.left!=null&&topl.right==null)return false;
+        if(topl.right!=null&&topr.left==null)return false;
+         if(topl.right!=null&&topr.left!=null)
+         {if(topl.right.val!=topr.left.val)return false;
+            if(topr.left.val==topl.right.val){
+                          helper.add(topl.right);
+            helper.add(topr.left);}}
+        }
+         return true;}
+}
