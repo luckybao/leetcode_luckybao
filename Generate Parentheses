@@ -1,0 +1,44 @@
+Generate Parentheses Total Accepted: 16054 Total Submissions: 51345 My Submissions
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+For example, given n = 3, a solution set is:
+
+"((()))", "(()())", "(())()", "()(())", "()()()"
+
+//solution one, using string
+public class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> result=new ArrayList<String>();
+        return generateParenthesis(0, 0, "",n,result);
+	}
+	public List<String> generateParenthesis(int left, int right, String s,int n,List<String> result) {
+		if (left > n || right > n || left < right) 	return result;
+		if (left == n && right == n) {
+			result.add(s);
+			return result;
+		}
+		generateParenthesis(left + 1, right,  s + "(",n,result);
+			generateParenthesis(left, right + 1,  s + ")",n,result);
+return result;}
+}
+//another solution since StringBuilder is faster than String, the logic is still recursion
+public class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> result=new ArrayList<String>();
+        generateParenthesis(0, 0, new StringBuilder(),n,result);
+		return result;
+	}
+	public List<String> generateParenthesis(int left, int right, StringBuilder s,int n,List<String> result) {
+		if (left > n || right > n || left < right) 	return result;
+		if (left == n && right == n) {
+			result.add(s.toString());
+			return result;
+		}
+		StringBuilder l=new StringBuilder(s);
+		l.append('(');
+		generateParenthesis(left + 1, right,  l,n,result);
+		StringBuilder r=new StringBuilder(s);
+		r.append(')');
+			generateParenthesis(left, right + 1,  r,n,result);
+return result;}
+}
