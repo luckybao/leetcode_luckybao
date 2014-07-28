@@ -1,0 +1,20 @@
+Merge Sorted Array Total Accepted: 18096 Total Submissions: 56733 My Submissions
+Given two sorted integer arrays A and B, merge B into A as one sorted array.
+
+Note:
+You may assume that A has enough space (size that is greater or equal to m + n) to hold additional elements from B. The number of elements initialized in A and B are m and n respectively.
+
+public class Solution {
+// work from backward, since you will rewrite the original array if work from front!!!
+    public void merge(int A[], int m, int B[], int n) {//logic!!!
+        int tail = m + n - 1;  
+   --n; --m;  
+   while (n >= 0) {  
+     if (m <0 || A[m] <= B[n]) {  
+       A[tail--] = B[n--];  
+     } else {  
+       A[tail--] = A[m--];  
+     }  
+   }  
+ }  
+}
