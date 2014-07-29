@@ -1,0 +1,41 @@
+Unique Paths Total Accepted: 15484 Total Submissions: 49640 My Submissions
+A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+
+The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).
+
+How many possible unique paths are there?
+
+public class Solution {//dp!!!//less space! O(min(m,n)) time: O(n!)
+    public int uniquePaths(int m, int n) {
+        if(m<=0||n<=0)return 0;
+     int i, j;
+     i=Math.max(m,n);
+     j=Math.min(m,n);
+     int[] row=new int[j];
+     row[0]=1;
+     for(int ii=0;ii<i;ii++){
+         for(int jj=1;jj<j;jj++)
+         row[jj]+=row[jj-1];
+     }
+    return row[j-1];    
+    }
+}
+
+//solution ii
+public class Solution {//Think about it in this way:
+//There are in total m+n-2 steps from Start to End and n-1 (or m-1) "turning points" where we move from one column (or row) to the next //one. Note that the "turning point" is not necessary to be a turn-left or turn-right point. For instance, moving from (i, j) to (i, j//+1) can also be counted as a turning point since it moves to next column.
+
+//Now the question becomes how many ways we can choose n-1 (or m-1) turning points from the total steps, i.e. C(m+n-2, n-1). We only //need to choose either row- or column-turning points since once those points are selected, the path has been determined. Obviously, //the combination can be computed in O(min(m, n)) time with O(1) space.
+    public int uniquePaths(int m, int n) {
+if (m == 0 || n == 0) return 0;  
+   
+   int x = Math.min(m, n), y = Math.max(m, n);  
+   double count = 1;  //!!!attention, must be double to compute to achieve factorial!
+   for (int i=1; i<x; ++i) {  
+     count *= (y + i - 1);  
+     count /= i;  
+   }  
+   
+   return (int)count;  
+ }  
+}
