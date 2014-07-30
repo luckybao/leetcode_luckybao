@@ -1,0 +1,51 @@
+Unique Paths II Total Accepted: 11849 Total Submissions: 42735 My Submissions
+Follow up for "Unique Paths":
+
+Now consider if some obstacles are added to the grids. How many unique paths would there be?
+
+An obstacle and empty space is marked as 1 and 0 respectively in the grid.
+
+For example,
+There is one obstacle in the middle of a 3x3 grid as illustrated below.
+
+[
+  [0,0,0],
+  [0,1,0],
+  [0,0,0]
+]
+The total number of unique paths is 2.
+
+Note: m and n will be at most 100.
+public class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {//DP
+        if(obstacleGrid.length==0)return 0;
+        int m,n,i;
+        m=obstacleGrid.length;
+        n=obstacleGrid[0].length;
+        int[] row=new int[n];
+        i=obstacleGrid[0].length-1;
+        if(obstacleGrid[m-1][n-1]!=1)row[i]=1;
+        i--;
+        while(i>=0){//FIRST LINE INITIALIZATION
+            if(obstacleGrid[obstacleGrid.length-1][i]!=1&&row[i+1]==1)
+            row[i]=1;
+            else row[i]=0;
+            i--;
+        }
+        m--;
+        while(m>0){//dp in row
+            m--;
+            i=obstacleGrid[0].length-1;
+            if(obstacleGrid[m][i]!=1&&row[i]==1)
+            row[i]=1;
+            else row[i]=0;
+            i--;
+            while(i>=0){
+            if(obstacleGrid[m][i]!=1)
+            row[i]+=row[i+1];
+                else row[i]=0;
+                i--;
+            }
+        }
+    return row[0];}
+}
