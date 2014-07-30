@@ -1,0 +1,54 @@
+Binary Tree Level Order Traversal II Total Accepted: 14203 Total Submissions: 45741 My Submissions
+Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
+
+For example:
+Given binary tree {3,9,20,#,#,15,7},
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its bottom-up level order traversal as:
+[
+  [15,7],
+  [9,20],
+  [3]
+]
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ //use arraydeque, also can use queue
+ //The java.util.ArrayDeque class provides resizable-array and implements the Deque interface. Following are the important points about Array Deques:
+//Array deques have no capacity restrictions so they grow as necessary to support usage.
+//They are not thread-safe; in the absence of external synchronization.
+//They do not support concurrent access by multiple threads.
+//!!!Null elements are prohibited in the array deques.
+//They are faster than Stack and LinkedList.
+
+public class Solution {
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {//use arraydeque
+        List<List<Integer>> res=new ArrayList<List<Integer>>();
+         if(root==null)return res;
+         ArrayDeque<TreeNode> queue=new ArrayDeque<TreeNode>();
+         queue.offerLast(root);
+         while(!queue.isEmpty()){
+             int n=queue.size();
+             List<Integer> level=new ArrayList<Integer>();
+             while(n>0){
+              TreeNode node=queue.pollFirst();
+              level.add(node.val);
+              if(node.left!=null)queue.offerLast(node.left);
+              if(node.right!=null)queue.offerLast(node.right);
+              n--;
+             }
+             res.add(level);
+         }
+         Collections.reverse(res);
+    return res;}
+}
