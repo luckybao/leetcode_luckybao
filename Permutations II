@@ -1,0 +1,32 @@
+Permutations II Total Accepted: 13200 Total Submissions: 53424 My Submissions
+Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+For example,
+[1,1,2] have the following unique permutations:
+[1,1,2], [1,2,1], and [2,1,1].
+
+public class Solution {//similar with solution 3 in Permutations I
+    public List<List<Integer>> permuteUnique(int[] num) {
+     List<List<Integer>> res=new ArrayList<List<Integer>>(); 
+     if(num.length==0) return res;
+     if(num.length==1){//two base cases: num.length==0/1
+     List<Integer> list=new ArrayList<Integer>();
+     list.add(num[0]);
+     res.add(list);
+         return res;
+     }
+    HashMap<Integer,Boolean> map=new HashMap<Integer,Boolean>();
+    int[] sub=new int[num.length-1];
+    for(int i=0;i<num.length;i++){
+        if(map.containsKey(num[i]))continue;
+        else{
+        for(int j=0;j<i;j++)sub[j]=num[j];
+        for(int j=i+1;j<num.length;j++)sub[j-1]=num[j];
+        for(List<Integer> temp:permuteUnique(sub)){
+            temp.add(num[i]);
+            res.add(temp);
+        }
+    map.put(num[i],true);}//this sentence can be put either in or out of else, front or back, all are right!:)
+    }
+    return res;}
+}
