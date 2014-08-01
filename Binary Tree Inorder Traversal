@@ -19,7 +19,7 @@ return [1,3,2].
  *     TreeNode(int x) { val = x; }
  * }
  */
-public class Solution {//INORDERMORRIS, it is wrong for(0,1)
+public class Solution {//INORDERMORRIS
     public List<Integer> inorderTraversal(TreeNode root) {//iteration
 List<Integer> result=new ArrayList<Integer>();
 TreeNode cur = root;  
