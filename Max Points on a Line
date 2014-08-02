@@ -1,0 +1,46 @@
+Max Points on a Line Total Accepted: 15043 Total Submissions: 139123 My Submissions
+Given n points on a 2D plane, find the maximum number of points that lie on the same straight line.
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    public int maxPoints(Point[] points) {
+        if(points.length<=2)return points.length;
+        int max=2;
+                  HashMap<Double, Integer> map=new HashMap<Double,Integer>(); 
+        for(int i=0;i<points.length;i++){//for each point, construct a hashmap with "key,value=slop, count", find max
+          map.clear();
+          int dup=1;
+          int value;
+          for(int j=i+1;j<points.length;j++){
+              if(points[j].x==points[i].x&&points[j].y==points[i].y){
+                  dup++;
+              }
+              else if(points[j].x==points[i].x){
+                  if(map.containsKey((double)Integer.MAX_VALUE))
+                   {value=map.get((double)Integer.MAX_VALUE)+1;
+                  map.put((double)Integer.MAX_VALUE,value);
+                   }
+                  else map.put((double)Integer.MAX_VALUE,1);
+              }
+              else{
+              double slope=0.0+(double)(points[j].y-points[i].y)/(points[j].x-points[i].x);//Trick! Double manipulation!!! -0.0 is different with 0.0! so we add 0.0 here! And no not forget (double) in front of division !!!!
+              if(map.containsKey(slope)){
+                   value=map.get(slope)+1;
+                  map.put(slope,value);
+              }else {
+                  map.put(slope, 1);
+              }
+              }
+              if(map.isEmpty()) max=dup>max?dup:max;
+              else max=(Collections.max(map.values())+dup)>max?(Collections.max(map.values())+dup):max;
+          }
+        }
+   return max; }
+}
