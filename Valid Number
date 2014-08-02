@@ -1,0 +1,96 @@
+Valid Number Total Accepted: 8796 Total Submissions: 80909 My Submissions
+Validate if a given string is numeric.
+
+Some examples:
+"0" => true
+" 0.1 " => true
+"abc" => false
+"1 a" => false
+"2e10" => true
+
+public class Solution {// without prepocessing, from ninechapter
+    public boolean isNumber(String s) {
+        if(s.length()==0)return true;
+       int i=0,j=s.length()-1;
+       while(i<=j&&' '==s.charAt(i))i++;
+       if(i>=s.length())return  false;
+       while(i<=j&&' '==s.charAt(j))j--;
+        if(s.charAt(i)=='+'||s.charAt(i)=='-')i++;
+       boolean num=false,exp=false,dot=false;
+        while(i<=j){
+        char c=s.charAt(i);
+            if(c>='0'&&c<='9'){num=true;}
+            else if(c=='.'){if(exp||dot)return false;
+                dot=true;//we can have "." at the end, so do not flip boolean: "num"
+            }
+            else if(c=='e'){if(exp || num == false)return false;
+                exp=true;num=false;
+            }
+            else if(c=='+'||c=='-'){
+                if(s.charAt(i-1)!='e')return false;
+            }
+            else return false;
+            i++;
+        }
+    
+        return num;
+    }
+}
+//another solution
+public class Solution {// learn how to use ENUMERATOR INTERFACE "enum"
+//     0: no input or only space 
+// 1: input digits 
+// 2: only "." 
+// 3: input signs "+ -"
+// 4: has digits or dots in previous input 
+// 5: input 'e' or 'E'
+// 6: input signs "+ -" after 'e E'
+// 7: input digits after 'e E'
+// 8: input space after previous valided input
+// Only state 1,4,7,8 is valided
+
+// input:
+// INVALID,  // 0 Include: Alphas, '(', '&' ans so on
+// SPACE,  // 1
+// SIGN, // 2 '+','-'
+// DIGIT,  // 3 numbers
+// DOT, // 4 '.'
+// EXPONENT,  // 5 'e' 'E'
+    private enum Type{
+            space(0),sign(1),digit(2),dot(3),e(4);
+            private int type;
+            private int getype(){return type;}
+            Type(int t){type=t;}
+        }
+    public boolean isNumber(String s) {
+        if(s.length()==0)return true;
+        
+        int[][] matrix=new int[][] {// be careful of 2D array initialization, two {} and no ";" in inner loop
+            {0,8,-1,-1,8,-1,-1,8,8},
+            {3,-1,-1,-1,-1,6,-1,-1,-1},
+            {1,1,4,1,4,7,7,7,-1},
+           { 2,4,-1,2,-1,-1,-1,-1,-1},
+            {-1,5,-1,-1,5,-1,-1,-1,-1},
+        };
+        Type t;//initialization!
+        int state=0;
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)==' ')
+            t=Type.space;
+            else if(s.charAt(i)=='+'||s.charAt(i)=='-')
+            t=Type.sign;
+            else if(s.charAt(i)>='0'&&s.charAt(i)<='9')
+            t=Type.digit;
+            else if(s.charAt(i)=='.')
+            t=Type.dot;
+            else if(s.charAt(i)=='e'||s.charAt(i)=='E')
+            t=Type.e;
+            else return false;
+            int newstate=matrix[t.getype()][state];
+            if(newstate<0)return false;
+            state=newstate;
+        }
+    
+        return (state==1||state==4||state==7||state==8);
+    }
+}
