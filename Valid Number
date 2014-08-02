@@ -59,7 +59,6 @@ public class Solution {// learn how to use ENUMERATOR INTERFACE "enum"
     private enum Type{
             space(0),sign(1),digit(2),dot(3),e(4);
             private int type;
-            private int getype(){return type;}
             Type(int t){type=t;}
         }
     public boolean isNumber(String s) {
@@ -86,7 +85,7 @@ public class Solution {// learn how to use ENUMERATOR INTERFACE "enum"
             else if(s.charAt(i)=='e'||s.charAt(i)=='E')
             t=Type.e;
             else return false;
-            int newstate=matrix[t.getype()][state];
+            int newstate=matrix[t.type][state];
             if(newstate<0)return false;
             state=newstate;
         }
