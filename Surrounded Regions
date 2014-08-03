@@ -1,0 +1,80 @@
+Surrounded Regions Total Accepted: 10735 Total Submissions: 77387 My Submissions
+Given a 2D board containing 'X' and 'O', capture all regions surrounded by 'X'.
+
+A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+For example,
+X X X X
+X O O X
+X X O X
+X O X X
+After running your function, the board should be:
+
+X X X X
+X X X X
+X X X X
+X O X X
+
+//thought: ut the peripheral region into the queue, check and mark, then change
+public class Solution {// it is an easy question, but must be carefully handled
+//1. time limited:only 'O' connected with peripheral region is not surrounded, so mark all 'o' connected with peripheral region, which means scan from the very outter circle, mark all connected, then scan the inner region, if not mark, change to 'X'
+//2. even though, my previous solution which use a helper class: Location in th queue, and do mark whever I find a 'o' in the peripheral circle could not pass due to time limitation. a quicker solution is use only one queue for bfs checking instead of whever find an 'o' then construct a queue
+//3. be careful of how to scan outter circle, the quickest one still need three for loop not two!!!
+    public void solve(char[][] board) {
+    if(board.length<=1)return;
+    if(board[0].length<=1)return;
+    int i,j;
+    Queue<Integer> queuex=new LinkedList<Integer>();
+        Queue<Integer> queuey=new LinkedList<Integer>();
+    for(i=0;i<board.length;i++){// here we do the first column and the last together in one for loop
+        if(board[i][0]=='O'){
+            queuex.offer(i);
+        queuey.offer(0);}
+        if(board[i][board[0].length-1]=='O'){
+            queuex.offer(i);
+        queuey.offer(board[0].length-1);}
+    }
+      for(i=1;i<board[0].length-1;i++){// here we do the first row and the last together in one for loop! time complexity is the same
+        if(board[board.length-1][i]=='O'){
+            queuex.offer(board.length-1);
+        queuey.offer(i);}
+        if(board[0][i]=='O'){
+            queuex.offer(0);
+        queuey.offer(i);}
+    }
+            while(!queuex.isEmpty()){
+            int topx=queuex.poll();
+            int topy=queuey.poll();
+            board[topx][topy]='N';
+            if(topx!=0){
+                if(board[topx-1][topy]=='O'){
+                    queuex.offer(topx-1);
+                    queuey.offer(topy);
+                }
+            }
+            if(topx!=board.length-1){
+                if(board[topx+1][topy]=='O'){
+                    queuex.offer(topx+1);
+                    queuey.offer(topy);
+                }
+            }
+            if(topy!=0){
+                if(board[topx][topy-1]=='O'){
+                    queuex.offer(topx);
+                    queuey.offer(topy-1);
+                }
+            }
+            if(topy!=board[0].length-1){
+                if(board[topx][topy+1]=='O'){
+                    queuex.offer(topx);
+                    queuey.offer(topy+1);
+                }
+            }
+        }
+    for(i=0;i<board.length;i++){
+        for(j=0;j<board[0].length;j++){
+        if(board[i][j]=='O')board[i][j]='X';
+    else if(board[i][j]=='N')board[i][j]='O';}
+         }
+    return;} 
+    }
