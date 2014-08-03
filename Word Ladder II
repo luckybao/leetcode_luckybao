@@ -1,0 +1,174 @@
+Word Ladder II Total Accepted: 8580 Total Submissions: 77044 My Submissions
+Given two words (start and end), and a dictionary, find all shortest transformation sequence(s) from start to end, such that:
+
+Only one letter can be changed at a time
+Each intermediate word must exist in the dictionary
+For example,
+
+Given:
+start = "hit"
+end = "cog"
+dict = ["hot","dot","dog","lot","log"]
+Return
+  [
+    ["hit","hot","dot","dog","cog"],
+    ["hit","hot","lot","log","cog"]
+  ]
+Note:
+All words have the same length.
+All words contain only lowercase alphabetic characters.
+
+public class Solution {
+    public List<List<String>> findLadders(String start, String end, HashSet<String> dict) {  
+   List<List<String>> paths = new ArrayList<List<String>>();  
+   if (start == null || end == null || start.length() == 0) return paths;  
+   
+   // maintain a hashmap for visited words  
+   Map<String, ArrayList<Node>> visited = new HashMap<String, ArrayList<Node>>();  
+   
+   // BFS to find the minimum sequence length  
+   getMinLength(start, end, dict, visited);  
+   
+   // DFS to back trace paths from end to start  
+   buildPaths(end, start, visited, new LinkedList<String>(), paths);  
+   
+   return paths;  
+ }  
+   
+ /* Use BFS to find the minimum transformation sequences length from start to end.  
+   Also store parent nodes from previous level for each visited valid word. */  
+ private void getMinLength(String start, String end, HashSet<String> dict,  
+     Map<String, ArrayList<Node>> visited) {  
+   // maintain a queue for words, depth and previous word during BSF  
+   Queue<Node> queue = new LinkedList<Node>();  
+   queue.add(new Node(start, 1));  
+   // BFS  
+   dict.add(end);  
+   int lastLevel = 0; //it is a marker to record find or not find 
+   while (!queue.isEmpty()) {  
+     Node node = queue.poll();  
+     if (lastLevel > 0 && node.depth == lastLevel) break;  //if lastlevel=0, means did not find valided path, else means find. but we also need node.depth==last level since it may have several paths to end!!!
+     // find transformable words in next level  
+     for (int i=0; i<node.word.length(); ++i) {  
+       StringBuilder sb = new StringBuilder(node.word);  
+       char original = sb.charAt(i);  
+       for (char c='a'; c<='z'; ++c) {  
+         if (c == original) continue;  
+         sb.setCharAt(i, c);  
+         String s = sb.toString();  
+         // if hits end, mark the current depth as the last level  
+         if (s.equals(end)) {  
+           if (lastLevel == 0) lastLevel = node.depth + 1;  //find
+         }  
+         if (dict.contains(s) && !s.equals(start)) { 
+             if(visited.containsKey(s)){// cannot use visited.get(s).get(0).depth == node.depth&&visited.get(s).get(0).depth == node.depth, but split one by one!
+           if (visited.get(s).get(0).depth == node.depth) {  
+             // parent nodes should be in the same level - to avoid circle in graph  
+            visited.get(s).add(node);  // Do not need to enqueue here! because the child has already been explored since there are parents recorded!!!
+           }
+         }else{
+             ArrayList<Node> pres=new ArrayList<Node>();
+             queue.add(new Node(s, node.depth+1));
+             pres.add(node); 
+             visited.put(s, pres);  
+         }
+        //  queue.add(new Node(s, node.depth+1));
+         }  
+       }  
+     }  
+   }  
+   return;  
+ }  
+   
+ /* Use DFS to back trace all paths from end to start. */  
+ private void buildPaths(String s, String start, Map<String, ArrayList<Node>> visited, LinkedList<String> path, List<List<String>> paths) {  
+   if (s == null || visited == null || path == null || paths == null) return;  
+   path.add(0, s);  
+   if (s.equals(start)) {  
+     ArrayList<String> p = new ArrayList<String>(path);  
+     paths.add(p);  
+   } else {  
+     ArrayList<Node> pres = visited.get(s);  
+     if (pres != null) {  
+       for (Node pre : pres) {  
+           LinkedList<String> p = new LinkedList<String>(path);//either every time has new linkedlist or use line 79, path.remove(0) but only one linkedlist
+         buildPaths(pre.word, start, visited, p, paths);  
+       }  
+     }  
+   }  
+//   path.remove(0);  
+ }  
+   
+ private class Node {  
+   String word;  
+   int depth;  
+   private Node(String w, int d) {  
+     word = w; depth = d;  
+   }  
+ }  
+}
+
+
+
+//another solution do not use "lastlevel" or "stop" to mark, simpler in code, but time is 1120ms vs 950ms, complexity the same
+public class Solution {//
+    public List<List<String>> findLadders(String start, String end, Set<String> dict) {
+       List<List<String>> res=new ArrayList<List<String>>();
+       if(start.length()!=end.length()||start.length()==0)return res;
+        List<String> list=new ArrayList<String>();
+       list.add(end);
+       HashMap<String,ArrayList<Node>> map=new HashMap<String,ArrayList<Node>>();
+       Boolean stop=false;
+       BFS(start,end,dict,map);
+       return DFS(list,res,start,end,map);
+    }
+    private class Node{
+        private int level;
+        private String string;
+        private Node(int l,String s){
+            level=l;string=s;
+        }
+    }
+    public void BFS(String start, String end, Set<String> dict,HashMap<String,ArrayList<Node>> map){
+        Queue<Node> queue=new LinkedList<Node>();
+        dict.add(end);
+        queue.offer(new Node(0,start));
+        while(!queue.isEmpty()){
+                Node top=queue.poll();
+                String s=top.string;
+                if(s.equals(end)){return;}
+                for(char c='a';c<='z';c++){
+                    for(int i=0;i<s.length();i++){
+                        if(c==s.charAt(i))continue;
+                        StringBuilder temp=new StringBuilder(s);
+                        temp.setCharAt(i,c);
+                        String ns=temp.toString();
+                        if(dict.contains(ns)){
+                            if(map.containsKey(ns)){
+                               ArrayList<Node> l=map.get(ns);
+                               if(l.get(0).level==top.level){
+                                   l.add(top);
+                               }
+                            }else {
+                                ArrayList<Node> nl=new ArrayList<Node>();
+                                nl.add(top);map.put(ns,nl);
+                                queue.offer(new Node(top.level+1,ns));
+                            }
+                        }
+                    }
+                }
+        }
+    }
+    public List<List<String>> DFS(List<String> list,List<List<String>> res,String start, String end,HashMap<String,ArrayList<Node>> map){
+        if(end.equals(start)){
+            res.add(list);return res;
+        }
+        if(map.get(end)!=null){
+        for(Node n:map.get(end)){
+            List<String> temp=new ArrayList<String>(list);
+            String s=n.string;
+            temp.add(0,s);
+            DFS(temp,res,start,s,map);
+        }}
+    return res;}
+}
