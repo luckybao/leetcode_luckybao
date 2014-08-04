@@ -1,0 +1,55 @@
+Word Break Total Accepted: 18571 Total Submissions: 89547 My Submissions
+Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+For example, given
+s = "leetcode",
+dict = ["leet", "code"].
+
+Return true because "leetcode" can be segmented as "leet code".
+
+public class Solution {
+    public boolean wordBreak(String s, Set<String> dict) {//table[i]=table[i-j]&&dict.contains(s.substring(i-j,i))
+        if(s.length()==0)return false;
+        boolean[] table=new boolean[s.length()+1];//setup DP table
+        table[0]=true;
+        for(int i=1;i<=s.length();i++){
+           for(int j=0;j<i;j++){
+              table[i]=table[i]||(table[j]&&dict.contains(s.substring(j,i)));
+           }
+        }
+    return table[s.length()];}
+}
+
+//with optimization, compute maxlength in dict first
+private int getMaxLength(Set<String> dict) {
+        int maxLength = 0;
+        for (String word : dict) {
+            maxLength = Math.max(maxLength, word.length());
+        }
+        return maxLength;
+    }
+
+    public boolean wordBreak(String s, Set<String> dict) {
+        if (s == null || s.length() == 0) {
+            return false;
+        }
+
+        int maxLength = getMaxLength(dict);
+        boolean[] canSegment = new boolean[s.length() + 1];
+
+        canSegment[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            canSegment[i] = false;
+            for (int j = 1; j <= maxLength && j <= i; j++) {
+                if (!canSegment[i - j]) {
+                    continue;
+                }
+                String word = s.substring(i - j, i);
+                if (dict.contains(word)) {
+                    canSegment[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return canSegment[s.length()];
