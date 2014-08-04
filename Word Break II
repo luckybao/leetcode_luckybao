@@ -109,7 +109,7 @@ public class Solution {
                         string.append(" ").append(item);
                         result.add(string.toString());
                     }
-                memo.put(s, result);}
+                memo.put(s, result);}//this sentence also can be put next,next.next line
            }
         }
         //memo.put(s, result);
