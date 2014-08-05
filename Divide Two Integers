@@ -1,0 +1,57 @@
+Divide Two Integers Total Accepted: 13950 Total Submissions: 85779 My Submissions
+Divide two integers without using multiplication, division and mod operator.
+
+//use binary manipulation and binary search idea, compact solution
+public class Solution {
+    public int divide(int dividend, int divisor) {//logic!!!
+        if(divisor==0)return Integer.MAX_VALUE;
+        if(dividend==0)return 0;
+        boolean sign=true;
+        if((dividend>0&&divisor<0)||(dividend<0&&divisor>0))sign=false;
+        long divd,divs,res=0;
+        divd=Math.abs((long)dividend);divs=Math.abs((long)divisor);
+        if(divs>divd)return 0;
+          while(divs<=divd){
+              int count=0;
+            while((divs<<count)<=divd){
+                count++;
+            }
+            if(count==0)break;
+            count--;
+            divd-=(divs<<count);
+            res+=1<<count;
+        }
+    if(!sign) res=-res;;
+       return (int)res;
+    }
+}
+
+//same logic, not that compact
+public class Solution {
+    public int divide(int dividend, int divisor) {//logic!!!
+        if(divisor==0)return Integer.MAX_VALUE;
+        if(dividend==0)return 0;
+        boolean sign=true;
+        if((dividend>0&&divisor<0)||(dividend<0&&divisor>0))sign=false;
+         if(divisor==1)return dividend;
+         if(divisor==-1)return -dividend;
+        long divd,divs,res=0;
+        divd=Math.abs((long)dividend);divs=Math.abs((long)divisor);
+        if(divs>divd)return 0;
+        int count=0;
+        while(divs<=divd){
+            divs<<=1;
+            count++;
+        }
+        while(count>=0)
+    { if(divd>=divs){
+            divd -= divs;
+            res += 1<<count;
+        }
+        divs >>= 1;
+        count--;
+    }
+    if(!sign) res=-res;;
+       return (int)res;
+    }
+}
