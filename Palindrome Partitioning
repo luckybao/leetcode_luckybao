@@ -1,0 +1,137 @@
+Palindrome Partitioning Total Accepted: 15205 Total Submissions: 58888 My Submissions
+Given a string s, partition s such that every substring of the partition is a palindrome.
+
+Return all possible palindrome partitioning of s.
+
+For example, given s = "aab",
+Return
+
+  [
+    ["aa","b"],
+    ["a","a","b"]
+  ]
+  
+  //three solutions
+  
+  public class Solution {
+    public List<List<String>> partition(String s) {
+       boolean[][] table=new boolean[s.length()][s.length()];//table[i][j] record s.substring(i,j+1) is palindrome 
+       for(int i=0;i<s.length();i++){//table initialization
+           for(int j=i;j<s.length();j++){
+               int ii=i,jj=j;
+               while(ii<jj){
+                   if(s.charAt(ii)!=s.charAt(jj)){
+                       table[i][j]=false;break;}
+               else{ii++;jj--;}
+               }
+               if(ii>=jj)table[i][j]=true;
+           }
+        }
+        //construct
+   HashMap<Integer, List<List<String>>> map=new HashMap<Integer, List<List<String>>>();
+       for(int i=s.length()-1;i>=0;i--){
+           List<List<String>> res=new ArrayList<List<String>>();
+           for(int j=s.length()-1;j>=i;j--){
+               if(table[i][j]){
+                   if(map.get(j+1)==null){
+                   List<String> sublist=new ArrayList<String>();
+                   sublist.add(s.substring(i,j+1));
+                   res.add(sublist);
+               }
+               else {
+                   for(List<String> list:map.get(j+1))
+                  { List<String> sublist=new ArrayList<String>(list);
+                   sublist.add(0,s.substring(i,j+1));
+                      res.add(sublist);
+                  }
+               }
+               }
+           }
+           map.put(i,res);
+       }
+    return map.get(0);}
+}
+//also can use arraylist, becareful
+public class Solution {
+    public boolean[][] matrix;//definition!
+    public List<List<String>> partition(String s) {//try my own
+    matrix=new boolean[s.length()][s.length()];
+      if(s.length()==0){
+          List<List<String>> res=new ArrayList<List<String>>();
+          res.add(new ArrayList<String>());
+          return res;
+      }
+      buildmatrix(s);
+      ArrayList<List<List<String>>> lists=new ArrayList<List<List<String>>>();
+      for(int i=0;i<s.length();i++){//it does not matter use bottom up or up to bottom, if you are careful enouph
+              List<List<String>> res=new ArrayList<List<String>>();
+          for(int j=i;j>=0;j--){
+              if(matrix[j][i]){
+                  if(j>0){// be careful here
+                  for(List<String> sub:lists.get(j-1)){
+                      List<String> newsub=new ArrayList<String>(sub);
+                      newsub.add(s.substring(j,i+1));
+                      res.add(newsub);
+                  }
+                  }else{
+                      List<String> newsub=new ArrayList<String>();
+                     newsub.add(s.substring(j,i+1));
+                      res.add(newsub);
+                  }
+              }
+          }
+        //   }
+          lists.add(res);
+      }
+return lists.get(s.length()-1);}
+
+public void buildmatrix(String s){
+    for(int j=0; j<s.length(); j++){
+        for(int i=0; i<=j; i++){
+            if(i == j){
+                matrix[i][j] = true;}
+            else if(i+1 == j && s.charAt(i)==s.charAt(j)){
+                matrix[i][j] = true;
+            }
+            else if(matrix[i+1][j-1] && s.charAt(i)==s.charAt(j)){
+                matrix[i][j] = true;
+            }
+else{
+
+                matrix[i][j] = false;
+
+            }
+        }
+    }
+    }
+}
+
+//solution III,BACKTRACK
+public class Solution {
+    public List<List<String>> partition(String s) {//backtrack
+    List<List<String>> res=new ArrayList<List<String>>();
+    List<String> list=new ArrayList<String>();
+    return build(res,s,0,list);
+    }
+    public List<List<String>> build(List<List<String>> res,String s,int start,List<String> list){
+        if (start >= s.length()) {
+            res.add(list);
+            return res;
+        }
+        for (int i = start; i <s.length(); i++) {
+            if (is(s,start,i)) {
+                List<String> temp=new ArrayList<String>(list);
+                temp.add(s.substring(start,i+1));
+            build(res,s,i+1, temp);//BE AWARE IT IS i+1 not i!!! or it will end in infinite loop!
+            }
+            }
+   return res; }
+    private boolean is(String s,int start,int end){//is palindrome
+        if(end==start)return true;
+        int i=0;
+        while(i<=(end-start+1)/2){
+            if(s.charAt(i+start)!=s.charAt(end-i))return false;
+            i++;
+        }
+    return true;}
+}
