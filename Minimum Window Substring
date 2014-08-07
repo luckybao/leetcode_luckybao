@@ -1,0 +1,57 @@
+Minimum Window Substring Total Accepted: 11221 Total Submissions: 62438 My Submissions
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+For example,
+S = "ADOBECODEBANC"
+T = "ABC"
+Minimum window is "BANC".
+
+Note:
+If there is no such window in S that covers all characters in T, return the emtpy string "".
+
+If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S.
+
+public class Solution {
+    public String minWindow(String S, String T) {//maintain two hashmaps, one need to find, do not modified after reconstructed, the others change along the way  
+   if(S.equals(T))return S;
+   int s=S.length(),t=T.length();
+   if(t>=s||t==0)return new String();
+   String res=new String();
+   HashMap<Character,Integer> need=new HashMap<Character,Integer>();
+   for(int i=0;i<t;i++){
+       add(need,T.charAt(i));
+   }
+   int count=0;
+   HashMap<Character,Integer> found=new HashMap<Character,Integer>();
+   ArrayList<Integer> list=new ArrayList<Integer>();
+   int left=0,right=0;
+   for(int i=0;i<s;i++){
+       right=i;
+       char c=S.charAt(i);
+        if(!need.containsKey(c))continue;
+        list.add(i);add(found,c);if(found.get(c)<=need.get(c)){count++;}
+       while(count>=t){
+        if(res.length()==0||res.length()>right-list.get(left)+1)res=S.substring(list.get(left),right+1);
+            if(res.length()==T.length())return res;
+            char ch=S.charAt(list.get(left));
+            remove(found,ch);//do not do that before the while loop since there may be duplicates in inner loop and do this before "while loop" since you need to do this anyway, it will only increase running time
+            left++;
+            if(!found.containsKey(ch)||(found.get(ch)<need.get(ch)))count--;
+       }
+   }
+  
+ return res;} 
+ public void add(HashMap<Character,Integer> map, char c){
+     if(map.containsKey(c))map.put(c,map.get(c)+1);
+     else map.put(c,1);
+ }
+ public void remove(HashMap<Character,Integer> map, char c){
+     if(map.containsKey(c))map.put(c,map.get(c)-1);
+     else return;
+     if(map.get(c)==0)map.remove(c);
+ }
+ public void window(int left,int next,char c,HashMap<Character,Integer> map){
+     remove(map,c);
+     left=next;
+ }
+}
