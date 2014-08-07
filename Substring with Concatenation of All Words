@@ -1,0 +1,63 @@
+Substring with Concatenation of All Words Total Accepted: 10402 Total Submissions: 57830 My Submissions
+You are given a string, S, and a list of words, L, that are all of the same length. Find all starting indices of substring(s) in S that is a concatenation of each word in L exactly once and without any intervening characters.
+
+For example, given:
+S: "barfoothefoobarman"
+L: ["foo", "bar"]
+
+You should return the indices: [0,9].
+(order does not matter).
+
+public class Solution {//algorithm from others
+//we are looking for continuous concatenations of words in list L and all words in L are of the same length. To cover all possibilities, we can start from a letter of S[0..k-1] and search for all potential concatenation from that position. That is, we check concatenation at 0, k, 2k, ..., n-1; then 1, k+1, 2k+1, ..., n-1; then 2, k+2, 2k+2, ..., n-1, etc.; until k-1, 2k-1, 3k-1, ..., n-1.
+// Start from the first character of S (begin = 0), cut a substring of length k,
+// If it is not a valid word in list L, restart from next substring (i.e. begin += k);
+// If it is a valid word but has seen before (i.e. a duplicate), forward begin pointer until previous one is removed from the current window;
+// Otherwise, add the substring to the current collection. If we get all words (i.e. hit a concatenation), forward begin pointer by one and check the next substring.
+// What is the complexity now?
+// We hit each substring at most twice, one to add into the collection and one to remove from the collection. There are O(n) substrings in total, where n is the total number of characters in string S, and for each substring it takes O(k) = O(1) to check whether it is a valid word or not.
+// So, in total, this algorithm runs in time O(n*k) = O(n).
+   public List<Integer> findSubstring(String S, String[] L) {//try my own
+   List<Integer> res=new ArrayList<Integer>();
+   if(S.length()==0||L.length==0)return res;
+   int len=L[0].length(),tlen=L.length;
+   HashMap<String, Integer> map=new HashMap<String, Integer>();
+   for(String w:L){
+       add(w,map);
+   }
+   for(int i=0;i<len;i++){//like KMP
+       HashMap<String, Integer> cm=new HashMap<String, Integer>();//cm:current map
+       int count=0;
+       for(int j=i,begin=i;begin<=S.length()-tlen*len&&j<=S.length()-(tlen-count)*len;){//j like a runner or end pointer
+         String sub=S.substring(j,j+len);
+         if(!map.containsKey(sub)){
+             j+=len;
+             begin=j;
+             count=0;
+             cm.clear();
+         }else if(cm.containsKey(sub)&&cm.get(sub)>=map.get(sub)){
+             j+=len;begin+=len;
+         }else{
+             add(sub,cm);
+             count++;
+             j+=len;
+                 if(count>=tlen){
+                 res.add(begin);
+                 remove(S.substring(begin,begin+len),cm);
+                 begin+=len;
+                 count--;
+             }
+         }
+       }
+   }
+   return res;}
+   private void add(String w, HashMap<String, Integer> map){
+       if(map.containsKey(w)) map.put(w,map.get(w)+1);
+       else map.put(w,1);
+   }
+   private void remove(String w, HashMap<String, Integer> map){
+       if(map.containsKey(w))map.put(w,map.get(w)-1);
+       else return;
+       if(map.get(w)==0)map.remove(w);
+   }
+}
