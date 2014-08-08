@@ -1,0 +1,29 @@
+Valid Parentheses Total Accepted: 15684 Total Submissions: 55666 My Submissions
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+The brackets must close in the correct order, "()" and "()[]{}" are all valid but "(]" and "([)]" are not.
+
+//use a hashmap to record different parentheses
+public class Solution {
+    public boolean isValid(String s) {
+        if(s.length()==0||s.length()==1)return false;
+        HashMap<Character, Character> map = new HashMap<Character, Character>();//should use "Character" not "char or others"
+        map.put('(',')');
+        map.put('[',']');
+        map.put('{','}');
+        Stack<Character> stack=new Stack<Character>();
+        int i=0;
+        // stack.push(s.charAt(0));
+        while(i<=s.length()-1){
+            if(map.containsKey(s.charAt(i)))
+            {stack.push(s.charAt(i));}
+            else if(!stack.isEmpty()&&map.get(stack.peek())==s.charAt(i)){
+                stack.pop();
+            }
+            else return false;
+            i++;
+        }
+    if(stack.isEmpty())return true;// stack may not be empty!
+        else return false;
+    }
+}
