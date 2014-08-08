@@ -1,0 +1,61 @@
+Longest Valid Parentheses Total Accepted: 12744 Total Submissions: 65531 My Submissions
+Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
+
+For "(()", the longest valid parentheses substring is "()", which has length = 2.
+
+Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4.
+
+//two solutions
+public class Solution {//idea come from website http://n00tc0d3r.blogspot.com/2013/04/longest-valid-parentheses.html
+// When going from left to right,
+// First, skip invalid ')'s
+// Then, find the longest valid parentheses that ended with an invalid '(' or ')'
+// When going backwards,
+// Skip invalid '('s
+// Find the longest valid parentheses that ended with an invalid parenthesis
+// And then select the longer one from the two results.
+
+// By doing this, we can find the longest one without using extra spaces! (Well, we iterate string twice but it is still O(n) time.
+    public int longestValidParentheses(String s) {//logic! O(n)time, 2 passes, O(1) space without stack
+   if(s.length()<=1)return 0;
+   return Math.max(find('(',0,0,s.length(),s,1),find(')',0,s.length()-1,-1,s,-1)); }
+   public int find(char c,int count,int start,int end,String s,int step){
+       int max=0,len=0;
+       while(start!=end){
+           if(s.charAt(start)==c)count++;
+           else{
+               if(count!=0){
+                   if(count>0){count--;
+                   len+=2;}
+                   if(count==0) max = Math.max(max, len);
+               }else len=0;
+           }
+       start+=step;}
+   return max;}
+}
+
+//solution two, with the help of stack, O(n) space and time, logic!!!
+public class Solution {
+    public int longestValidParentheses(String s) {//logic! O(n)time O(n) space with stack
+    int maxLen = 0, last = -1;  
+   Stack<Integer> lefts = new Stack<Integer>();  
+   for (int i=0; i<s.length(); ++i) {  
+     if (s.charAt(i)=='(') {  
+       lefts.push(i);  
+     } else {  
+       if (lefts.isEmpty()) {  
+         // no matching left  
+         last = i;  
+       } else {  
+         // find a matching pair  
+         lefts.pop();  
+         if (lefts.isEmpty()) {  
+           maxLen = Math.max(maxLen, i-last);  
+         } else {  
+           maxLen = Math.max(maxLen, i-lefts.peek());  
+         }  
+       }  
+     }  
+   }  
+   return maxLen; }
+}
