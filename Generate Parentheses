@@ -42,3 +42,37 @@ public class Solution {
 			generateParenthesis(left, right + 1,  r,n,result);
 return result;}
 }
+
+//iterative from web, clever
+public class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> al=new ArrayList<String>();
+        Queue<Element> q=new LinkedList<Element>();
+        q.add(new Element("",0,0));
+        while(!q.isEmpty()){
+            Element e=q.poll();
+            if(e.left==n && e.right==n){
+                al.add(e.str);
+            }
+            else{
+                if(e.left<n)
+                    q.add(new Element(e.str+"(", e.left+1,e.right));
+                
+                if(e.left>e.right)
+                    q.add(new Element(e.str+")",e.left,e.right+1));
+            }
+        }
+        
+        return al;}
+        class Element{
+    String str;
+    int left;
+    int right;
+    
+    public Element(String s, int l, int r){
+        str=s;
+        left=l;
+        right=r;
+    }
+}
+}
