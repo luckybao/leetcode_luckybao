@@ -58,3 +58,38 @@ public class Solution {//calculate along the way
    return data;  
  }
 }
+// same logic as above, but easy to think of
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution{//
+    public int maxPathSum(TreeNode root) {
+  	if(root==null)return Integer.MIN_VALUE;
+  	Node n=new Node(root);
+  	find(n);
+  	return n.sum;
+	}
+ public void find(Node root){
+     if(root.node==null)return;
+     Node left=new Node(root.node.left);
+     Node right=new Node(root.node.right);
+     find(left);find(right);
+     root.with=Math.max(0,root.node.val+Math.max(left.with,right.with));
+     root.sum=Math.max(left.with+right.with+root.node.val,Math.max(left.sum,right.sum));
+ }
+	public class Node{
+	    TreeNode node;
+	    int with;int sum;
+	    public Node(TreeNode n){
+	        node=n;
+	        with=0;
+	        sum=Integer.MIN_VALUE;
+	    }
+	}
+}
