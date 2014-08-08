@@ -1,0 +1,72 @@
+Evaluate Reverse Polish Notation Total Accepted: 19614 Total Submissions: 99029 My Submissions
+Evaluate the value of an arithmetic expression in Reverse Polish Notation.
+
+Valid operators are +, -, *, /. Each operand may be an integer or another expression.
+
+Some examples:
+  ["2", "1", "+", "3", "*"] -> ((2 + 1) * 3) -> 9
+  ["4", "13", "5", "/", "+"] -> (4 + (13 / 5)) -> 6
+  //solution one, neat, learn to use Integer.valueOf(), when calculating, push current result into stack again, calculate along the way
+  public class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> s = new Stack<Integer>();
+        String operators = "+-*/";
+        for(String token : tokens){
+            if(!operators.contains(token)){
+                s.push(Integer.valueOf(token));//
+                continue;
+            }
+
+            int a = s.pop();
+            int b = s.pop();
+            if(token.equals("+")) {
+                s.push(b + a);
+            } else if(token.equals("-")) {
+                s.push(b - a);
+            } else if(token.equals("*")) {
+                s.push(b * a);
+            } else {
+                s.push(b / a);
+            }
+        }
+        return s.pop();
+    }
+}
+//solution two, do everything on your own, no Integer.valueOf()
+public class Solution {//maintain a stack of integer, if there is an operator, calculate, then push the result back to the stack, be careful that the second poped will be the first one in the calculation phase(subroutine cal, line31); number may have sign, careful!
+    public int evalRPN(String[] tokens) {
+        if(tokens.length<=0)return 0;
+        if(tokens.length==1&&(!op(tokens[0])))return num(tokens[0]);
+        Stack<Integer> stack=new Stack<Integer>();
+        int res=0;
+        for(int i=0;i<tokens.length;i++){
+            if(!op(tokens[i])){stack.push(num(tokens[i]));continue;}
+            if(stack.isEmpty())return 0;
+            int b=stack.pop();// first is b, see line 31, subroutine
+            if(stack.isEmpty())return 0;
+            int a=stack.pop();//second is a
+            res=cal(a,b,tokens[i]);
+            stack.push(res);//push back
+        }
+    return res;}
+    public int num(String s){//whether it is a digit
+        char[] c=s.toCharArray();
+        int n=0,sign=1,i=0;
+        if(c[i]=='+')i++;
+        else if(c[i]=='-'){i++;sign=-1;}
+        for(;i<c.length;i++){
+            n=n*10+c[i]-'0';
+        }return n*sign;
+    }
+    public boolean op(String s){//whether it is an operator
+        if(s.length()!=1)return false;
+        if(s.charAt(0)=='+'||s.charAt(0)=='-'||s.charAt(0)=='*'||s.charAt(0)=='/')return true;
+        else return false;
+    }
+    public int cal(int a,int b,String s){
+        if(s.equals("+"))return a+b;
+        else if(s.equals("-"))return a-b;
+        else if(s.equals("*"))return a*b;
+        else return a/b;
+    }
+}
