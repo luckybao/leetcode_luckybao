@@ -1,0 +1,60 @@
+Binary Tree Maximum Path Sum Total Accepted: 15456 Total Submissions: 77582 My Submissions
+Given a binary tree, find the maximum path sum.
+
+The path may start and end at any node in the tree.
+
+For example:
+Given the below binary tree,
+
+       1
+      / \
+     2   3
+Return 6.
+
+//two solutions
+public class Solution{// use a global value, clever, cannot put it into submethod, since max will only be changed locally!!!
+//store max value
+	int max; 
+    public int maxPathSum(TreeNode root) {
+  		max = (root == null) ? Integer.MIN_VALUE : root.val;
+		findMax(root);
+		return max;
+	}
+	public int findMax(TreeNode node) {
+		if (node == null)
+			return 0;
+		// recursively get sum of left and right path
+		int left = Math.max(findMax(node.left), 0);
+		int right = Math.max(findMax(node.right), 0);
+		//update maximum here
+		max = Math.max(node.val + left + right, max);
+		// return sum of largest path of current node
+		return node.val + Math.max(left, right);
+	}
+}
+
+//solution two, construct another class to store path sum
+public class Solution {//calculate along the way
+    public int maxPathSum(TreeNode root) {
+      // pass in an Object that will be filled in the two values
+   Data data = maxSubPath(root);  
+   return data.sum;  
+ }  
+
+ public class Data {
+   int path = 0;
+   int sum = Integer.MIN_VALUE;
+ }
+
+ public Data maxSubPath(TreeNode root) {  
+   Data data = new Data();
+   if (root == null) return data;
+
+   Data l = maxSubPath(root.left);
+   Data r = maxSubPath(root.right);
+
+   data.path = Math.max(0, Math.max(l.path, r.path) + root.val);
+   data.sum = Math.max(Math.max(l.sum, r.sum), l.path+root.val+r.path);
+   return data;  
+ }
+}
