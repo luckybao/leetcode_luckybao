@@ -1,0 +1,46 @@
+Regular Expression Matching Total Accepted: 14085 Total Submissions: 70752 My Submissions
+Implement regular expression matching with support for '.' and '*'.
+
+'.' Matches any single character.
+'*' Matches zero or more of the preceding element.
+
+The matching should cover the entire input string (not partial).
+
+The function prototype should be:
+bool isMatch(const char *s, const char *p)
+
+Some examples:
+isMatch("aa","a") → false
+isMatch("aa","aa") → true
+isMatch("aaa","aa") → false
+isMatch("aa", "a*") → true
+isMatch("aa", ".*") → true
+isMatch("ab", ".*") → true
+isMatch("aab", "c*a*b") → true
+
+//LOGIC!!!
+public class Solution {//for string manipulation, "substring" will need to copy all 
+//  did not understand the problem at first, here is an explanation: becareful "matches zero or more of THE preceding ELEMENT, ", not preceding elementS!!! isMatch("aab",""c*a*b")
+//The pattern :  "c*a*b" means,  there can be 0 or more 'c', 0 or more 'a' and one b.
+//cannot be O(n) from backward since if we have .*, since "." can match any single character, we need to check recursively
+//Overall, there are 2 different cases: 1) the second char of pattern is "*" , and 2) the second char of pattern is not "*".
+// For the 1st case, if the first char of pattern is not ".", the first char of pattern and string should be the same. Then continue to match the left part.
+// For the 2nd case, if the first char of pattern is "." or first char of pattern == the first i char of string, continue to match the left.
+    public boolean isMatch(String s, String p) {//try my own
+    if(p.length()==0)return (s.length()==0);
+    //if(s.length()==0)return (p.length()==0||p.charAt(1)=='*');
+    return helper(s,0,p,0);
+ }
+ public boolean helper(String s, int i, String p,int j){
+    if(j>=p.length())return (i>=s.length());
+    if(j==p.length()-1||p.charAt(j+1)!='*'){
+         if(i>=s.length()||(i<s.length()&&s.charAt(i)!=p.charAt(j)&&p.charAt(j)!='.'))return false;
+         return(helper(s,i+1,p,j+1));
+        
+     }
+     else {while(i<s.length()&&(s.charAt(i)==p.charAt(j)||p.charAt(j)=='.')){
+         if(helper(s,i,p,j+2))return true;
+         i++;}
+ return helper(s,i,p,j+2);}
+ }
+}
