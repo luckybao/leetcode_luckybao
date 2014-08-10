@@ -1,0 +1,54 @@
+Reorder List Total Accepted: 16515 Total Submissions: 81541 My Submissions
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+
+You must do this in-place without altering the nodes' values.
+
+For example,
+Given {1,2,3,4}, reorder it to {1,4,2,3}.
+
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public void reorderList(ListNode head) {
+    if(head==null||head.next==null||head.next.next==null)return;
+    ListNode slow=head, fast=head;
+        while(slow!=null&&fast!=null&&fast.next!=null){
+            slow=slow.next;fast=fast.next.next;
+        }
+        ListNode head2=slow.next;
+        slow.next=null;//remember to mark the end of first half!!! 
+        merge(head,reverse(head2));
+    }
+    private ListNode reverse(ListNode head){
+         if(head==null||head.next==null)return head;
+      ListNode dummy=new ListNode(0);
+      dummy.next=head;
+      while(head!=null&&head.next!=null){
+          ListNode cur=head.next;
+           head.next=head.next.next;
+          cur.next=dummy.next;
+          dummy.next=cur;
+          //head=head.next;//attention here!!!since head.next has already been changed, no need to change head to head.next!!!
+      }
+    return dummy.next;
+    }
+    private void merge(ListNode head1,ListNode head2){
+        while(head2!=null){
+                ListNode temp=head2.next;
+            head2.next=head1.next; 
+            head1.next=head2;
+            head1=head1.next.next;
+            head2=temp;
+        }
+    }
+}
