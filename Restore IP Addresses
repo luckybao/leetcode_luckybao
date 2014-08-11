@@ -1,0 +1,44 @@
+Restore IP Addresses Total Accepted: 12018 Total Submissions: 58861 My Submissions
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+For example:
+Given "25525511135",
+
+return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
+
+public class Solution {
+    public List<String> restoreIpAddresses(String s) {
+     List<String> res = new ArrayList<String>();
+     if(s.length()<=3||s.length()>12)return res;
+     return find(s,new StringBuilder(), res,0,0);
+}
+private List<String> find(String s, StringBuilder ip, List<String> res,int start,int loop){
+    if(loop>3||start>=s.length())return res;
+    if(loop==3){
+        String str=s.substring(start,s.length());
+        if(valid(str)){
+            ip.append(str);
+            res.add(ip.toString());
+        }
+        return res;
+    }
+    for(int i=0;i<3;i++){
+        if(start+i+1>s.length())continue;
+        String str=s.substring(start,start+i+1);
+        if(valid(str)){
+            StringBuilder temp=new StringBuilder(ip);
+            temp.append(str).append('.');
+            find(s,temp,res,start+i+1,loop+1);
+        }
+    }
+    return res;
+}
+private boolean valid(String str){
+    if(str==null || str.length()>3)return false;//str might be null!!! be careful here!
+    int n=Integer.parseInt(str);
+    if(str.charAt(0)=='0' && str.length()>1)
+        return false;
+    if(n>=0&&n<=255)return true;
+    else return false;
+}
+}
