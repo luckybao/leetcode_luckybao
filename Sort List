@@ -1,0 +1,49 @@
+Sort List Total Accepted: 17377 Total Submissions: 84999 My Submissions
+Sort a linked list in O(n log n) time using constant space complexity.
+
+//only mergesort canwork, for quick sort, the worst complexity if O(n^2)!!!
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {//merge sort
+    public ListNode sortList(ListNode head) {
+    if(head==null||head.next==null)return head;
+     ListNode slow = head, fast = head.next;//fast is head.next!!!not next!!! different with reorderlist!!! since if fast=slow, how to sort a list with only two element?
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+ListNode temp=slow.next;
+    ListNode right=sortList(temp);
+    slow.next=null;
+    ListNode left=sortList(head);
+        return merge(left, right);
+}
+ private ListNode merge(ListNode left,ListNode right){
+    if(right==null)return left;
+    if(left==null)return right;
+    ListNode dummy=new ListNode(0);
+    ListNode cur=dummy;
+    while(left!=null&&right!=null){
+        if(left.val<right.val){
+            cur.next=left;
+            left=left.next;
+        }
+    else {cur.next=right;
+            right=right.next;
+    }
+    cur=cur.next;
+    }
+    if(left!=null){
+        cur.next=left;
+    }else cur.next=right;
+return dummy.next;}
+}
