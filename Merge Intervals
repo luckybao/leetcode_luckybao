@@ -1,0 +1,73 @@
+Merge Intervals Total Accepted: 13190 Total Submissions: 63697 My Submissions
+Given a collection of intervals, merge all overlapping intervals.
+
+For example,
+Given [1,3],[2,6],[8,10],[15,18],
+return [1,6],[8,10],[15,18].
+
+//recursion
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+public class Solution {
+    public List<Interval> merge(List<Interval> intervals) {
+        if(intervals.size()<=1)return intervals;
+        Collections.sort(intervals, new ICompare());//learn to use Collections.sort method! No parameters here, but parameters in the ICompare class!!!
+        return helper(intervals,1);
+    }
+    class ICompare implements Comparator<Interval>{
+    public int compare(Interval a, Interval b) {
+        return a.start - b.start;}
+    }
+    public List<Interval> helper(List<Interval> intervals,int cur) {
+       if(cur>=intervals.size())return intervals;
+       if(intervals.get(cur).start<=intervals.get(cur-1).end){
+           if(intervals.get(cur).end>intervals.get(cur-1).end)
+           intervals.get(cur-1).end=intervals.get(cur).end;
+           intervals.remove(cur);
+           return helper(intervals,cur);
+       }else return helper(intervals,cur+1);
+    }
+}
+
+//Iterative
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+public class Solution {
+    public List<Interval> merge(List<Interval> intervals) {
+         int n=intervals.size()-1;
+        if(n<=0)return intervals;
+        Collections.sort(intervals, new ICompare());//learn to use Collections.sort method! No parameters here, but parameters in the ICompare class!!!
+        List<Interval> res=new ArrayList<Interval>();
+       Interval temp=intervals.get(0);//keep track of temp till end
+        for(int i=1;i<=n;i++){
+            Interval cur=intervals.get(i);
+            if(temp.end>=cur.start){
+               temp.end=Math.max(temp.end,cur.end);
+            }else {
+                res.add(temp);
+                temp=cur;
+            }
+        }
+        res.add(temp);//be careful !!!
+        return res;
+    }
+   private class ICompare implements Comparator<Interval>{
+       public int compare(Interval a,Interval b){//its small letter
+           return a.start-b.start;
+       }
+   }
+}
