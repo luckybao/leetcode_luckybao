@@ -1,0 +1,57 @@
+Valid Sudoku Total Accepted: 11626 Total Submissions: 41672 My Submissions
+Determine if a Sudoku is valid, according to: Sudoku Puzzles - The Rules.
+
+The Sudoku board could be partially filled, where empty cells are filled with the character '.'.
+
+
+A partially filled sudoku which is valid.
+
+Note:
+A valid Sudoku board (partially filled) is not necessarily solvable. Only the filled cells need to be validated.
+
+public class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        if(board.length==0||board.length!=board[0].length||board.length!=9)return false;
+        char[] block=new char[9];
+        int i,j;
+        //check column
+        for(i=0;i<9;i++){
+           for(j=0;j<9;j++){
+               block[j]=board[i][j];
+           }
+           if(!check(block)) return false;
+        }
+        //check row
+                for(j=0;j<9;j++){
+           for(i=0;i<9;i++){
+               block[i]=board[i][j];
+           }
+           if(!check(block)) return false;
+        }
+        //check innerblock, tricky here!
+        int m,n,c;
+        for(m=0;m<9;m+=3){
+            for(n=0;n<9;n+=3){
+                c=0;//count
+                for(i=0;i<3;i++){
+                    for(j=0;j<3;j++){
+                    block[c]=board[m+i][n+j];
+                    c++;}
+                }
+                if(!check(block))return false;
+            }
+        }
+    return true;}
+    //check subroutine
+    public boolean check(char[] block){
+        HashMap<Character,Boolean> set=new HashMap<Character,Boolean>();
+        for(char s:block){
+            if(s!='.'){
+            if(s>'9'||s<'0')return false;
+            else
+            if(!set.containsKey(s)) set.put(s,true);
+                else return false;
+            }
+        }
+    return true;}
+}
