@@ -1,0 +1,100 @@
+Sudoku Solver Total Accepted: 10367 Total Submissions: 49592 My Submissions
+Write a program to solve a Sudoku puzzle by filling the empty cells.
+
+Empty cells are indicated by the character '.'.
+
+You may assume that there will be only one unique solution.
+
+//solution one
+public class Solution {//no optimization, backtracking, do not think too much!!!//logic!!!//same as N-Queens,Combination Sum,Combinations,Permutations!!!
+    public void solveSudoku(char[][] board) {
+        if(board.length!=9||board[0].length!=9)return;
+        solve(board);
+    }
+    public boolean solve(char[][] board){
+       for(int i=0;i<9;i++){
+           for(int j=0;j<9;j++){
+               if(board[i][j]=='.'){
+                   for(char c='1';c<='9';c++){
+                    if(valid(board, i, j, c)){
+                            board[i][j]=c;
+                            if (solve(board))return true;//recursion here!
+                            else board[i][j]='.';//backtrack here!
+                        }
+                   }return false;//prune here!!!
+               }
+           }
+       }
+    return true;}
+    public boolean valid(char[][] board,int i, int j, char c){
+        for (int row=0; row<9; row++){
+            if (board[row][j]==c)return false;
+        }
+       // check row
+        for (int col=0; col<9; col++){
+            if (board[i][col]==c)return false;
+        }
+        // check block
+        for(int row=i/3*3; row<i/3*3+3; row++){
+            for (int col=j/3*3; col<j/3*3+3; col++){
+                if (board[row][col]==c)return false;
+            }
+        }
+        return true;}
+}
+
+//solution two
+public class Solution {//using data structrue to help, it should be better however the data structure initialization may took some time ,so performance is worse than first backtracking, maybe faster with recording size, but did not try .
+////step: use an ArrayList<ArrayDeque<Integer>> to record position of each to be filled position, use 3 ArrayList<HashMap<Character,Integer>> to record row, collumn and box,
+//first to go through board(O(n^2)) to initialize, than still use backtracking, but we have record the to be filled postion, so just iteratate througth the ArrayList<ArrayDeque<Integer>>. when checking using "valid" method, it will be O(1) instead of O(n^2).
+//Total still the same O(m*n^2), m=n=9
+    public void solveSudoku(char[][] board) {
+        if(board.length!=9||board[0].length!=9)return;
+        ArrayList<ArrayDeque<Integer>> rowpw=new ArrayList<ArrayDeque<Integer>>();
+        for(int i=0;i<9;i++)rowpw.add(new ArrayDeque<Integer>());
+        ArrayList<HashMap<Character,Integer>> rowwp=new ArrayList<HashMap<Character,Integer>>();//record row, hashmap: which,position
+        for(int i=0;i<9;i++)rowwp.add(new HashMap<Character,Integer>());//initialization
+        ArrayList<HashMap<Character,Integer>> colwp=new ArrayList<HashMap<Character,Integer>>();//record col, hashmap: which,position
+        for(int i=0;i<9;i++)colwp.add(new HashMap<Character,Integer>());//initialization
+        ArrayList<HashMap<Character,Integer>> boxwp=new ArrayList<HashMap<Character,Integer>>();//record box, hashmap: which,position
+        for(int i=0;i<9;i++)boxwp.add(new HashMap<Character,Integer>());//initialization
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                if(board[i][j]!='.'){
+                    rowwp.get(i).put(board[i][j],j);
+                    colwp.get(j).put(board[i][j],i);
+                    boxwp.get(i/3*3+j/3).put(board[i][j],i%3*3+j%3);
+                }else rowpw.get(i).add(j);//record '.' position
+            }
+        }
+        solve(board,rowpw,rowwp,colwp,boxwp);
+    }
+    public boolean solve(char[][] board,ArrayList<ArrayDeque<Integer>> rowpw,ArrayList<HashMap<Character,Integer>> rowwp,ArrayList<HashMap<Character,Integer>> colwp,ArrayList<HashMap<Character,Integer>> boxwp){
+       for(int i=0;i<9;i++){
+          while(!rowpw.get(i).isEmpty()){
+              int j=rowpw.get(i).peekLast();
+                   for(char c='1';c<='9';c++){
+                    if(valid(board, i, j, c,rowpw,rowwp,colwp,boxwp)){
+                            board[i][j]=c;
+                            rowpw.get(i).pollLast();
+                            rowwp.get(i).put(c,j);
+                            colwp.get(j).put(c,i);
+                    boxwp.get(i/3*3+j/3).put(c,i%3*3+j%3);
+                            if (solve(board,rowpw,rowwp,colwp,boxwp))return true;//recursion here!
+                            else{
+                                rowpw.get(i).add(j);
+                            rowwp.get(i).remove(c);
+                            colwp.get(j).remove(c);
+                    boxwp.get(i/3*3+j/3).remove(c);
+                            }
+                        }
+                   }return false;
+          }
+       }
+    return true;}
+    public boolean valid(char[][] board,int i, int j, char c,ArrayList<ArrayDeque<Integer>> rowpw,ArrayList<HashMap<Character,Integer>> rowwp,ArrayList<HashMap<Character,Integer>> colwp,ArrayList<HashMap<Character,Integer>> boxwp){
+            if (rowwp.get(i).containsKey(c))return false;
+            if (colwp.get(j).containsKey(c))return false;
+            if (boxwp.get(i/3*3+j/3).containsKey(c))return false;
+        return true;}
+}
