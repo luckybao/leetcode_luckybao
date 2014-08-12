@@ -1,0 +1,57 @@
+Longest Palindromic Substring Total Accepted: 16530 Total Submissions: 80249 My Submissions
+Given a string S, find the longest palindromic substring in S. You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.
+
+//solution one, try one by one as a center of palindrom
+public class Solution {//O(n^2)time complexity, O(1)space
+    public String longestPalindrome(String s) {
+       if(s.length()<=1)return s;
+       int max=1,begin=0,end=0,cur,n;
+       for(int i=0;i<s.length();i++){
+            cur=0;n=0;//s.charAt(i)is left part
+        while((i-cur>=0)&&((i+cur+1)<s.length())){
+            if(s.charAt(i-cur)==s.charAt(i+cur+1)){
+                n+=2;
+                if(n>max){max=n;begin=i-cur;end=i+cur+1;}
+                //if(cur==s.length()/2)break;//in time prune
+            cur++;}else break;
+        }
+        cur=1;n=1;//s.charAt(i)is center
+         while((i-cur>=0)&&((i+cur)<s.length())){
+            if(s.charAt(i-cur)==s.charAt(i+cur)){
+                n+=2;
+                if(n>max){max=n;begin=i-cur;end=i+cur;}
+                cur++;}else break;////in time prune
+        }
+       } 
+    return s.substring(begin,end+1);}
+}
+
+//solution two, linear time and complexity
+public class Solution {//O(n)time complexity, O(n)space
+//http://leetcode.com/2011/11/longest-palindromic-substring-part-ii.html
+    public String longestPalindrome(String s) {
+       if(s.length()<=1)return s;
+       int len=s.length();
+       int[] P=new int[len*2+3];
+       char[] c=new char[len*2+3];
+       for(int i=0;i<len;i++){
+           c[i*2+2]=s.charAt(i);
+           c[i*2+1]='#';
+       }
+       c[0]='%';c[len*2+1]='#';c[len*2+2]='&';//pad end
+       int right=0,center=0;
+       for(int i=1;i<c.length-1;i++){//attention here!i=1,right=0
+       int mirror=2*center-i;
+           if(i<right)P[i]=Math.min(right-i,P[mirror]);//based on giant shoulder, do not to calculate if i<right
+           while(c[i+(P[i]+1)]==c[i-(P[i]+1)])P[i]++;
+           if(i+P[i]>right){//change center
+               right=i+P[i];
+               center=i;
+           }
+       }
+       int max=0,index=0;
+       for(int i=0;i<P.length;i++){
+           if(P[i]>max){max=P[i];index=i;}
+       }
+    return s.substring((index-1-max)/2,(index-1+max)/2);}
+}
