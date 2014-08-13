@@ -1,0 +1,36 @@
+Implement strStr() Total Accepted: 16418 Total Submissions: 75466 My Submissions
+Implement strStr().
+
+Returns a pointer to the first occurrence of needle in haystack, or null if needle is not part of haystack.
+
+public class Solution { //O(haystack.length())time, O(needle.length())space
+   //KMP reference from others: https://oj.leetcode.com/submissions/detail/8564012/
+    public String strStr(String haystack, String needle) {
+        if(haystack.length()<needle.length())return null;
+        if(needle.length()==0)return haystack;
+        int[] overlap=new int[needle.length()];
+        build(needle, overlap);
+        return find(haystack,needle,overlap);
+    }
+    private void build(String needle,int[] overlap){
+        overlap[0]=0;
+        int match=0,i=1;
+        while(i<needle.length()){
+            while(match!=0&&needle.charAt(i)!=needle.charAt(match))match=overlap[match-1];
+            if(needle.charAt(i)==needle.charAt(match))match++;
+            overlap[i]=match;
+            i++;
+        }
+    }
+    private String find(String haystack, String needle,int[] overlap){
+        int i=0,j=0;
+        while(i<=haystack.length()-needle.length()){
+          while(haystack.charAt(i)==needle.charAt(j)){
+              if(j==needle.length()-1)return haystack.substring(i-j,haystack.length());
+              i++;j++;
+          } 
+        if(j==0){i++;continue;}//no match
+        j=overlap[j-1];//reset j
+        }
+    return null;}
+}
