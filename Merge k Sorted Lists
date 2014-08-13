@@ -1,0 +1,85 @@
+Merge k Sorted Lists Total Accepted: 15453 Total Submissions: 70780 My Submissions
+Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {//solution one, merge one by one
+//each original list has been touched O(logk) times, where k is the number of lists. That said, each node has been touched O(logk) times. So the total running time is O(nlogk), where n is the total number of nodes.
+    public ListNode mergeKLists(List<ListNode> lists) {
+        int last = lists.size() - 1;  
+   if (last < 0) return null;  
+   while (last > 0) {  
+    //  int cur = 0;  
+    //  while (cur < last) { //this way, we can clearly see running time is O(log k), k: number of lists
+    //   lists.set(cur, merge(lists.get(cur), lists.get(last)));  //set method!!!
+    //   last--;cur++;
+    //  } 
+    lists.set(last-1,merge(lists.get(last),lists.get(last-1)));//both line 21-25(smaller time in OJ, better) or here linew 26-27 are right(longer time)
+    last--;
+   }  
+   return lists.get(0);}
+    public ListNode merge(ListNode l1, ListNode l2){
+         ListNode dummy = new ListNode(0);
+        ListNode lastNode = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                lastNode.next = l1;
+                l1 = l1.next;
+            } else {
+                lastNode.next = l2;
+                l2 = l2.next;
+            }
+            lastNode = lastNode.next;
+        }
+        
+        if (l1 != null) {
+            lastNode.next = l1;
+        } else {
+            lastNode.next = l2;
+        }
+        return dummy.next;}
+}
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {//solution two, priority queue
+    public ListNode mergeKLists(List<ListNode> lists) {
+ if(lists.size()==0)return null;
+ if(lists.size()==1)return lists.get(0);
+ Queue<ListNode> queue=new PriorityQueue<ListNode>(lists.size(),Comparelist);//remember how to initialize!!! 
+ for(int i=0;i<lists.size();i++){
+     if(lists.get(i)!=null)queue.add(lists.get(i));
+ }
+ ListNode dummy=new ListNode(0);
+ ListNode cur=dummy;
+ while(!queue.isEmpty()){
+     ListNode node=queue.poll();
+     cur.next=node;
+     cur=cur.next;
+     if(node.next!=null)queue.add(node.next);
+ }
+return dummy.next;}
+public Comparator<ListNode> Comparelist = new Comparator<ListNode>(){/// remember!!!
+        public int compare(ListNode l1, ListNode l2) {
+            return (l1.val - l2.val);
+        }   
+};// this is very important!!! it has ";" at the end for Comparator !!!
+}
