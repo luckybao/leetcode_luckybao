@@ -1,0 +1,149 @@
+4Sum Total Accepted: 12305 Total Submissions: 57159 My Submissions
+Given an array S of n integers, are there elements a, b, c, and d in S such that a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
+
+Note:
+Elements in a quadruplet (a,b,c,d) must be in non-descending order. (ie, a ≤ b ≤ c ≤ d)
+The solution set must not contain duplicate quadruplets.
+    For example, given array S = {1 0 -1 0 -2 2}, and target = 0.
+
+    A solution set is:
+    (-1,  0, 0, 1)
+    (-2, -1, 1, 2)
+    (-2,  0, 0, 2)
+    
+    public class Solution {//solution 1, O(n^3) complexity, O(1)space
+    public List<List<Integer>> fourSum(int[] num, int target) {
+        List<List<Integer>> res=new ArrayList<List<Integer>>();
+        if(num.length<=3)return res;
+        Arrays.sort(num);
+        for(int start=0;start<num.length-3;start++){
+           if(start>=num.length-3)return res;
+        int second=start+1,l=second+1,r=num.length-1;
+        int starget=target-num[start];
+        for(;second<=num.length-3;second++){
+            int ftarget=starget-num[second];
+            l=second+1;r=num.length-1;
+            while(l<r){
+                if(num[l]+num[r]<ftarget){
+                    l++;
+                    while(l<r&&num[l]==num[l-1])l++;
+                }
+                else if(num[l]+num[r]>ftarget){
+                    r--;
+                    while(l<r&&num[r]==num[r+1])r--;
+                }
+                else {
+                    List<Integer> temp=new ArrayList<Integer>();
+                    temp.add(num[start]);temp.add(num[second]);temp.add(num[l]);temp.add(num[r]);res.add(temp);
+                    l++;r--;while(l<r&&num[l]==num[l-1])l++;while(l<r&&num[r]==num[r+1])r--;
+                }
+            }
+            while(second<=num.length-3&&num[second]==num[second+1])second++;
+        }
+        while(start<=num.length-4&&num[start]==num[start+1])start++;  
+        }
+    return res;}
+}
+
+//solution 2_1stedition, O(n^2logn)time, O(n^2)space. after construct set of "Two"s, than sort, then add, time is O((n^2)log(n^2))=O(n^2logn)
+public class Solution {//solution 2, O(n^2*logn) complexity, O(n)space
+    public List<List<Integer>> fourSum(int[] num, int target) {
+        List<List<Integer>> res=new ArrayList<List<Integer>>();
+        if(num.length<=3)return res;
+        ArrayList<Two> list=new ArrayList<Two>();//use arraylist to record all the pairs
+        for(int i=0;i<num.length-1;i++){
+            for(int j=i+1;j<num.length;j++){
+              list.add(new Two(i,j,num[i]+num[j]));  
+            }
+        }
+        Collections.sort(list,new Comparator<Two>(){// learn to use Collections.sort with Comparator method!!!
+            public int compare(Two a, Two b){return a.sum-b.sum; }
+        });
+        HashSet<List<Integer>> set=new HashSet<List<Integer>>();
+        int l=0,r=list.size()-1;
+        while(l<r){
+            int s=list.get(l).sum+list.get(r).sum;
+            if(s<target)l++;
+            else if(s>target)r--;
+            else{
+                int lend=l,rend=r;//find all the pairs with the same sum
+              while(lend<rend&&list.get(lend+1).sum==list.get(lend).sum)lend++;
+              while(lend<rend&&list.get(rend-1).sum==list.get(rend).sum)rend--;
+              for(int i=l;i<=lend;i++){
+                  for(int j=r;j>=rend;j--){
+                      if(!Equal(list.get(i),list.get(j))){
+                          List<Integer> temp=new ArrayList<Integer>();
+                          temp.add(num[list.get(i).index1]);temp.add(num[list.get(i).index2]);
+                          temp.add(num[list.get(j).index1]);temp.add(num[list.get(j).index2]);
+                          Collections.sort(temp);
+                          if(set.add(temp)){res.add(temp);}
+                      }
+                  }
+              }
+              l++;r--;
+            }
+        }
+        return res;}
+    public class Two{// this class help to record index and sum
+        private int index1,index2,sum;
+        private Two(int a,int b,int s){
+            index1=a;index2=b;sum=s;
+        }
+        
+    }
+    public boolean Equal(Two a,Two b){//compare whether two "Two"s are the same, method should in the class!!!
+        if(a.index1==b.index1||a.index2==b.index2||a.index1==b.index2||a.index2==b.index1)return true;
+        else return false;
+    }
+    
+}
+//solution two,2_2 edition,same time and space, use hashmap to record
+public class Solution {//solution 2, O(n^2*logn) complexity, O(n)space, why the time is bigger? intersting...
+    public List<List<Integer>> fourSum(int[] num, int target) {
+        List<List<Integer>> res=new ArrayList<List<Integer>>();
+        if(num.length<=3)return res;
+        ArrayList<Two> list=new ArrayList<Two>();//use arraylist to record all the pairs
+        HashMap<Integer,ArrayList<Two>> map=new HashMap<>();
+        for(int i=0;i<num.length-1;i++){
+            for(int j=i+1;j<num.length;j++){
+                int sum=num[i]+num[j];
+                if(!map.containsKey(sum)){
+                    ArrayList<Two> temp=new ArrayList<Two>();
+                    temp.add(new Two(i,j));
+                    map.put(sum,temp);
+                }else {ArrayList<Two> temp=map.get(sum);
+                    temp.add(new Two(i,j));
+                    map.put(sum,temp);
+                }
+            }
+        }
+        HashSet<List<Integer>> set=new HashSet<List<Integer>>();
+        for(Integer s:map.keySet()){//learn to iterate through hashmap!!!
+            if(map.containsKey(target-s)){
+                ArrayList<Two> temp1=map.get(s);
+                ArrayList<Two> temp2=map.get(target-s);
+                for(int i=0;i<temp1.size();i++){
+                    for(int j=0;j<temp2.size();j++){
+                        if(!Equal(temp1.get(i),temp2.get(j))){//skip duplicate, attention!!!
+                        List<Integer> temp=new ArrayList<Integer>();
+                          temp.add(num[temp1.get(i).index1]);temp.add(num[temp1.get(i).index2]);
+                          temp.add(num[temp2.get(j).index1]);temp.add(num[temp2.get(j).index2]);
+                           Collections.sort(temp);
+                           if(set.add(temp))res.add(temp);}
+                    }
+                }
+            }
+        }
+        return res;}
+    public class Two{// this class help to record index
+        private int index1,index2;
+        private Two(int a,int b){
+            index1=a;index2=b;
+        }
+    }
+    public boolean Equal(Two a,Two b){//compare whether two "Two"s are the same, method should in the class!!!
+        if(a.index1==b.index1||a.index2==b.index2||a.index1==b.index2||a.index2==b.index1)return true;
+        else return false;
+    }
+    
+}
