@@ -1,0 +1,57 @@
+Sqrt(x) Total Accepted: 19637 Total Submissions: 88366 My Submissions
+Implement int sqrt(int x).
+
+Compute and return the square root of x.
+
+//solution 1_1, binary search
+public class Solution {//since it is integer, we can use binary search!
+    public int sqrt(int x) {//the result is tricky, I do not think OJ is right,like for 3, it is 1, but 2 is more reasonable
+       if(x<0)return 0;
+       if(x<=1)return x;
+       int low=0,high=x;
+    int div=x,mid=x;
+       while(low<=high){
+           mid=(low+high)/2;
+           div = x / mid;  //do not use multiply!!! it will overflow!!!
+     if (mid == div) return mid;  
+     if (mid < div) low = mid+1;  
+     else high = mid-1;  
+       }
+    return high;}
+}
+
+//solution 1_2, binary search, use "long"
+
+public class Solution {
+    public int sqrt(int x) {
+        long lo = 0;
+        long hi = x;
+
+        while (hi >= lo) {     
+            long mid = lo+(hi-lo)/2;
+            if (x < mid * mid) {
+                hi = mid-1;      // not hi = mid
+            } else {
+                lo = mid+1;  
+            }
+        }
+        return (int) hi;
+    }
+}
+
+//solution 2, newton
+public class Solution {//newton
+//f(y)=y^2-x, when f(y)==0, we find y. f'(y)=2*y, y_(n+1)=y_n-f(n)/f'(n)=(y_n+x/y_n)/2, make sure we use double in the calculation!!!
+    public int sqrt(int x) {//the result is tricky, I do not think OJ is right,like for 3, it is 1, but 2 is more reasonable
+       if(x<0)return 0;
+       if(x<=1)return x;
+     double pre = 0;  
+    double guess = 1;  
+    while (guess != pre)  //convergence condition!!!
+    {  
+        pre = guess;  
+        guess = (guess + x / guess) / 2;  
+    }  
+    return (int)(guess);  
+    }
+}
