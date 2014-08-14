@@ -1,0 +1,57 @@
+Clone Graph Total Accepted: 14357 Total Submissions: 63698 My Submissions
+Clone an undirected graph. Each node in the graph contains a label and a list of its neighbors.
+
+
+OJ's undirected graph serialization:
+Nodes are labeled uniquely.
+
+We use # as a separator for each node, and , as a separator for node label and each neighbor of the node.
+As an example, consider the serialized graph {0,1,2#1,2#2,2}.
+
+The graph has a total of three nodes, and therefore contains three parts as separated by #.
+
+First node is labeled as 0. Connect node 0 to both nodes 1 and 2.
+Second node is labeled as 1. Connect node 1 to node 2.
+Third node is labeled as 2. Connect node 2 to node 2 (itself), thus forming a self-cycle.
+Visually, the graph looks like the following:
+
+       1
+      / \
+     /   \
+    0 --- 2
+         / \
+         \_/
+         
+         
+/**
+ * Definition for undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     List<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+public class Solution {//not quite understand at first. copy!!! means go through the least, and return a copy, not the original!!! use hashmap to record duplicate
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        if(node==null)return node;
+        ArrayDeque<UndirectedGraphNode> q=new ArrayDeque<UndirectedGraphNode>();
+        HashMap<UndirectedGraphNode,UndirectedGraphNode> map=new HashMap<UndirectedGraphNode,UndirectedGraphNode>();
+        UndirectedGraphNode rootcopy=new UndirectedGraphNode(node.label);
+        q.addLast(node);map.put(node,rootcopy);
+        while(!q.isEmpty()){
+           UndirectedGraphNode last=q.removeLast();
+           UndirectedGraphNode lastcopy = map.get(last);
+           for(UndirectedGraphNode neighbor:last.neighbors){
+             if(map.containsKey(neighbor)){lastcopy.neighbors.add(map.get(neighbor));//do not need to add into queue!!!! it has been recorded!!!
+           }else {
+               UndirectedGraphNode temp=new UndirectedGraphNode(neighbor.label);
+               map.put(neighbor,temp);
+               lastcopy.neighbors.add(temp);
+               q.addFirst(neighbor);
+           }  
+           }
+        }
+        return rootcopy;
+    }
+   
+}
