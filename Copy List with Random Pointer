@@ -1,0 +1,81 @@
+Copy List with Random Pointer Total Accepted: 16469 Total Submissions: 71352 My Submissions
+A linked list is given such that each node contains an additional random pointer which could point to any node in the list or null.
+
+Return a deep copy of the list.
+
+//solution one, use hashmap, O(n) time and space
+/**
+ * Definition for singly-linked list with a random pointer.
+ * class RandomListNode {
+ *     int label;
+ *     RandomListNode next, random;
+ *     RandomListNode(int x) { this.label = x; }
+ * };
+ */
+public class Solution {//
+    public RandomListNode copyRandomList(RandomListNode head) {
+        if(head==null)return null;
+        HashMap<RandomListNode, RandomListNode> map=new HashMap<RandomListNode, RandomListNode>();
+        RandomListNode headcopy=new RandomListNode(head.label);
+        map.put(head,headcopy);
+        RandomListNode dummy=new RandomListNode(0);
+        dummy.next=headcopy;
+        while(head!=null){
+            if(head.next==null)
+            {headcopy.next=null;}
+            else{
+               if(map.containsKey(head.next))headcopy.next=map.get(head.next);
+            else {
+                RandomListNode nextcopy=new RandomListNode(head.next.label);
+        map.put(head.next,nextcopy);headcopy.next=nextcopy;
+            } 
+            }
+            if(head.random==null)headcopy.random=null;
+            else {
+             if(map.containsKey(head.random))headcopy.random=map.get(head.random);
+            else {
+                RandomListNode randomcopy=new RandomListNode(head.random.label);
+        map.put(head.random,randomcopy);headcopy.random=randomcopy;
+            }   
+            }
+            head=head.next;
+            headcopy=headcopy.next;
+        }
+return dummy.next;}
+}
+
+//solution two, without hash,space O(1) time O(n), make a circle in the original list, be careful about make a circle, we need to copy next and random separately, then split it
+/**
+ * Definition for singly-linked list with a random pointer.
+ * class RandomListNode {
+ *     int label;
+ *     RandomListNode next, random;
+ *     RandomListNode(int x) { this.label = x; }
+ * };
+ */
+public class Solution {//solution two, without hash,space O(1) time O(n), make a circle in the original list, then split it
+    public RandomListNode copyRandomList(RandomListNode head) {
+        if(head==null)return null;
+        RandomListNode node=head;
+        while(node!=null){//copy original list, newnode is node.next, a circle
+           RandomListNode newnode=new RandomListNode(node.label);
+           newnode.next=node.next;
+           node.next=newnode;
+           node=node.next.next;
+        }
+        node=head;
+        while(node!=null){//copy random, cannot do it together with the next step(split)!!!, or it may point back to original list!!!
+            if(node.random!=null)node.next.random=node.random.next;
+            node=node.next.next;
+        }
+        RandomListNode dummy=new RandomListNode(0);
+        node=dummy;
+        while(head!=null){//split newlist and origlist and put the origlist back!!!
+            node.next=head.next;
+            head.next=head.next.next;
+                  if(node.next!=null)  
+            node= node.next; 
+            head=head.next;
+        }
+    return dummy.next;}
+}
