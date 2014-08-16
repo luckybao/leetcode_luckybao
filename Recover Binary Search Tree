@@ -1,0 +1,63 @@
+Recover Binary Search Tree Total Accepted: 13360 Total Submissions: 57141 My Submissions
+Two elements of a binary search tree (BST) are swapped by mistake.
+
+Recover the tree without changing its structure.
+
+Note:
+A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {//inorder morris
+    public void recoverTree(TreeNode root) {
+        TreeNode a=null,b=null;
+        TreeNode first=null,second=null;
+TreeNode cur = root;  
+   while (cur != null) {  
+     if (cur.left != null) {  
+       TreeNode pre = cur.left;  
+       while (pre.right != null && pre.right != cur) {  
+         pre = pre.right;  
+       }  
+       if (pre.right == null) { // set right to successor  
+         pre.right = cur;  
+         cur = cur.left;  
+       } else { // visit and revert the change  
+         pre.right = null;  
+      	if(first==null)first=cur;
+      else{
+          second=cur;
+          if(second.val<first.val){
+              if(a==null){a=first;b=second;}// must use second and first to help instead of only a, b, since a and b might be far away and not predecessor and successor!!!
+              else {b=second;}
+          }
+          first=cur;
+      }
+         cur = cur.right;  
+       }  
+     } else { // visit and move to successor 
+      	if(first==null)first=cur;
+      else{
+          second=cur;
+          if(second.val<first.val){
+              if(a==null){a=first;b=second;}
+              else {b=second;}
+          }first=cur;
+      }
+       cur = cur.right;  
+     }  
+   }  
+        swap(a,b);return;}
+        public void swap(TreeNode a, TreeNode b){
+            if(a==null||b==null)return;
+            int temp;
+            temp=a.val;a.val=b.val;b.val=temp;
+        }
+}
