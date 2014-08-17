@@ -1,0 +1,25 @@
+Jump Game Total Accepted: 16822 Total Submissions: 62073 My Submissions
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Determine if you are able to reach the last index.
+
+For example:
+A = [2,3,1,1,4], return true.
+
+A = [3,2,1,0,4], return false.
+
+//O(n) backtrace
+public class Solution {
+    public boolean canJump(int[] A) {//maximum jump not determined jump
+        if(A.length==0||A.length==1)return  true;
+        int i=A.length-2,cur=A.length-1;
+        while(i>=0){
+            if(A[i]>=(cur-i))cur=i;
+            i--;
+        }
+        if(cur!=0)return false;
+        else return true;
+    }
+}
