@@ -1,0 +1,98 @@
+Anagrams Total Accepted: 13186 Total Submissions: 56236 My Submissions
+Given an array of strings, return all groups of strings that are anagrams.
+
+Note: All inputs will be in lower-case.
+
+//solution one, create hashcode
+public class Solution {//learn to create hashcode!!!, use two prime numbers. http://en.wikipedia.org/wiki/Java_hashCode()
+    private int getHash(int[] count) {
+        int hash = 0;
+        int a = 17;
+        int b = 23;
+        for (int num : count) {
+            hash = hash * a + num;
+            a = a * b;
+        }
+        return hash;
+    }
+    
+    public ArrayList<String> anagrams(String[] strs) {
+        ArrayList<String> result = new ArrayList<String>();
+        HashMap<Integer, ArrayList<String>> map = new HashMap<Integer, ArrayList<String>>();
+
+        for (String str : strs) {
+            int[] count = new int[26];
+            for (int i = 0; i < str.length(); i++) {
+                count[str.charAt(i) - 'a']++;
+            }
+
+            int hash = getHash(count);
+            if (!map.containsKey(hash)) {
+                map.put(hash, new ArrayList<String>());
+            }
+
+            map.get(hash).add(str);
+        }
+
+        for (ArrayList<String> tmp : map.values()) {
+            if (tmp.size() > 1) {
+                result.addAll(tmp);
+            }
+        }
+
+        return result;}
+}
+
+//solution two, rewrite each string
+public class Solution {
+    public List<String> anagrams(String[] strs) {//generate unique lable for each string
+     List<String> res=new ArrayList<String>();
+     if(strs.length<=1)return res;
+     HashMap<String,Integer> map=new HashMap<String,Integer>();
+     for(int i=0;i<strs.length;i++){
+         String string=strs[i];
+         int[] pre=new int[26];
+         for(int j=0;j<string.length();j++){//examine each character and compare with pre
+             int c=string.charAt(j)-'a';
+             pre[c]++;
+         }
+         StringBuilder newstring=new StringBuilder();
+         for(int j=0;j<pre.length;j++){
+             if(pre[j]!=0){
+                 char ch=(char)('a'+j);
+                 newstring.append(ch);newstring.append(pre[j]);}
+         }
+         if(map.containsKey(newstring.toString())){
+             if(map.get(newstring.toString())!=-1)
+             {res.add(strs[map.get(newstring.toString())]);
+             res.add(strs[i]);
+                 map.put(newstring.toString(),-1);//mark the first one has been recorded, this way, we do not need to record the array in hashmap
+             }
+             else {res.add(strs[i]);}
+         }
+         else{map.put(newstring.toString(),i);}
+     }
+    return res;}
+}
+// solution three, sort, O(nlogn)
+public class Solution {
+    public List<String> anagrams(String[] strs) {//another solution, each string to characterarray, then sort, compare with hashmap
+     List<String> res=new ArrayList<String>();
+     if(strs.length<=1)return res;
+     HashMap<String,Integer> map=new HashMap<String,Integer>();
+     for(int i=0;i<strs.length;i++){
+        char[] string=strs[i].toCharArray();
+        Arrays.sort(string);//rememeber sort function!!!
+        String str = new String(string);//remember to put it back to string format not char[]!!! since if it is "" which means empty, you cannot record it with char[] but you can do it with String type
+         if(map.containsKey(str)){
+             if(map.get(str)!=-1)
+             {res.add(strs[map.get(str)]);
+             res.add(strs[i]);
+                 map.put(str,-1);//mark the first one has been recorded
+             }
+             else {res.add(strs[i]);}
+         }
+         else{map.put(str,i);}
+     }
+    return res;}
+}
