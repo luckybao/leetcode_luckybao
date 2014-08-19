@@ -1,0 +1,98 @@
+N-Queens Total Accepted: 12515 Total Submissions: 48493 My Submissions
+The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.
+
+
+
+Given an integer n, return all distinct solutions to the n-queens puzzle.
+
+Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space respectively.
+
+For example,
+There exist two distinct solutions to the 4-queens puzzle:
+
+[
+ [".Q..",  // Solution 1
+  "...Q",
+  "Q...",
+  "..Q."],
+
+ ["..Q.",  // Solution 2
+  "Q...",
+  "...Q",
+  ".Q.."]
+]
+//solution one
+public class Solution {//use binary manipulation
+    public List<String[]> solveNQueens(int n) {
+       List<String[]> res=new ArrayList<String[]>();
+       if(n==0)return res;
+       ArrayList<Integer> record=new ArrayList<>();
+       return solve(res,n,0,record);
+    }
+    private List<String[]> solve(List<String[]> res, int n,int start,ArrayList<Integer> record){
+        if(record.size()==n){
+            res.add(build(n,record));
+            return res;
+        }
+        for(int i=0;i<n;i++){
+            record.add(i);
+            if(valid(record,i))solve(res,n,start+1,record);
+            record.remove(record.size()-1);
+        }
+   return res; }
+   private String[] build(int n,ArrayList<Integer> record){
+       String[] string=new String[n];
+       for(int i=0;i<n;i++){
+           int a=record.get(i);
+           StringBuilder sb=new StringBuilder();
+           for(int j=0;j<a;j++)sb.append('.');
+              sb.append('Q');
+           for(int j=a+1;j<n;j++)sb.append('.');
+           string[i]=sb.toString();
+       }
+  return string; }
+  private boolean valid(ArrayList<Integer> record, int i){
+      for(int j=0;j<record.size()-1;j++){
+          int a=record.get(j);
+          if(i==a||Math.abs(record.size()-1-j)==Math.abs(a-i))return false;//this is tricky!!! be careful!
+      }
+  return true;} 
+}
+
+public class Solution {//use binary manipulation
+public List<String[]> res;
+public long valid;
+    public List<String[]> solveNQueens(int n) {
+        res=new ArrayList<String[]>();
+if(n==0)return res;
+long[] row=new long[n];
+valid=(1<<n)-1;
+return solve(row,0,0,0, 0); 
+    }
+    public List<String[]> solve(long[] rows,int cur,long row,long lDiagonal, long rDiagonal){//row to record matrix, i to record which row is woring on
+       //long validator = (1 << rows.length) - 1; // (1 1 1 ... 1), n of 1's  
+   if (row == valid) { // find a solution  
+     build(rows);  
+   } else {  
+     long candidates = ((~(row | lDiagonal | rDiagonal)) & valid); // find potential positions  
+     while (candidates > 0) {  // pick up lowest bit  
+       long pos = candidates & (- candidates);  
+       // remove it from candidates
+       candidates -= pos;  
+       // add to result row array
+       rows[cur] = pos;  
+       solve(rows, cur+1, (row | pos),  ((lDiagonal | pos) << 1), ((rDiagonal | pos) >> 1));  
+     }  
+   }  
+   return res;  }
+    public void build(long[] row){
+        String[] string= new String[row.length];  
+   for (int i=0; i<row.length; i++) {  
+     string[i] = Long.toBinaryString(row[i]).replace('0', '.').replace('1', 'Q');//function "toBinaryString, replace"
+     while (string[i].length() < row.length) string[i] = '.' + string[i];
+        }
+        res.add(string);
+     // return res;  
+    }
+    
+}
