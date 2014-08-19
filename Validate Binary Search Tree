@@ -1,0 +1,66 @@
+Validate Binary Search Tree Total Accepted: 18368 Total Submissions: 71315 My Submissions
+Given a binary tree, determine if it is a valid binary search tree (BST).
+
+Assume a BST is defined as follows:
+
+The left subtree of a node contains only nodes with keys less than the node's key.
+The right subtree of a node contains only nodes with keys greater than the node's key.
+Both the left and right subtrees must also be binary search trees.
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {//inorder morris
+   if(root==null)return true;
+   TreeNode cur=root,pre;
+   int a=Integer.MIN_VALUE;
+   boolean start=false;
+   while(cur!=null){
+       if(cur.left!=null){
+           pre=cur.left;
+           while(pre.right!=null&&pre.right!=cur)pre=pre.right;
+           if(pre.right==null){
+               pre.right=cur;
+               cur=cur.left;
+           }else{
+               if(!start)start=true;
+               else if(cur.val<=a)return false;
+               a=cur.val;
+               pre.right=null;
+               cur=cur.right;
+           }
+       }else {
+           if(!start)start=true;
+               else if(cur.val<=a)return false;
+               a=cur.val;
+           cur=cur.right;}
+   }
+ return true;}
+}
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {//you cannot only compare a root with its two children, but two subtrees!!! so we need to trace the low and high value when doing recursion
+    public boolean isValidBST(TreeNode root) {
+   if(root==null)return true;
+    return(valid(root,Integer.MIN_VALUE,Integer.MAX_VALUE));
+ }
+ private boolean valid(TreeNode root,int start,int end){
+   if(root==null)return true;
+   if(root.val>end||root.val<start)return false;
+   return(valid(root.left,start,root.val-1)&&valid(root.right,root.val+1,end)); 
+ }
+}
