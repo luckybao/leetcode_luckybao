@@ -1,0 +1,53 @@
+N-Queens II Total Accepted: 11331 Total Submissions: 34363 My Submissions
+Follow up for N-Queens problem.
+
+Now, instead outputting board configurations, return the total number of distinct solutions.
+
+//solution one
+public class Solution {//backtracking, use a 1D array record queens position
+    public int total;
+    public int totalNQueens(int n) {
+        total=0;
+        int[] r=new int[n];
+        return queens(0,n,r);
+    }
+    public int queens(int k,int n, int[] r){
+        if(k>=n){total++;return total;}
+        for(int i=0;i<n;i++){
+            r[k]=i;
+            if(valid(k,n,r)){
+               queens(k+1,n,r);
+            }
+        }
+    return total;}
+    public boolean valid(int k,int n,int[] r){
+        int i=k-1;
+        while(i>=0){
+            if(r[i]==r[k])return false;
+            if(Math.abs(i-k)==Math.abs(r[i]-r[k]))return false;
+            i--;
+        }
+    return true;}
+}
+//solution two, bit manipulation
+public class Solution {//bit manipulation http://www.matrix67.com/blog/archives/266
+    public int total,valid;
+    public int totalNQueens(int n) {
+        total=0;
+        valid=(1<<n)-1;
+        queens(0,0,0);
+        return total;
+    }
+    public void queens(long row, long ldiagonal,long rdiagonal){
+        if(row==valid)// find a valid, return
+        {total++;return;}
+long now=(~(row | ldiagonal | rdiagonal))&valid;//find all the position we can fill
+     while(now>0){
+         long next=now & (-now);//the first position
+         now-=next;
+         queens(next|row,(next|ldiagonal)<<1,(next|rdiagonal)>>1);
+     }
+   }
+}
+
+
