@@ -1,0 +1,14 @@
+Pow(x, n) Total Accepted: 19722 Total Submissions: 76124 My Submissions
+Implement pow(x, n).
+//attention overflow!!!
+public class Solution {
+    //first come up with time and space both O(logN), store all intermidiate value like x^2,x^4,x^8..., however we can have O(1) space, logic: Deduction steps: for example, if n=6, 6=2+4=(1*2)+2*2, if n=11, 11=3+8=(1*2+1)+2*2*2
+    public double pow(double x, int n) {//recursive,be careful about range of integers is [-2^32, 2^32-1], so we recursive use from exp>>1, not from exp!!!if we write a subroutine, it may overflow, with Math.abs(-2147483648) which is 2147483648, you can use bit manipulation like &, | ..., but you can not compaire like 2147483648==?
+       if(n==0)return 1;
+       if(n==1)return x;
+       int exp=Math.abs(n);
+       double half=pow(x,exp>>1);
+       double res=half*half;
+       if((exp&1)==1)res*=x;
+        return n>0?res:1/res;}
+}
