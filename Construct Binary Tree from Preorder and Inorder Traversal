@@ -1,0 +1,33 @@
+Construct Binary Tree from Preorder and Inorder Traversal Total Accepted: 13489 Total Submissions: 51165 My Submissions
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {//logic !!! pre and in 
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder.length!=inorder.length||preorder.length==0)return null;
+        HashMap<Integer,Integer> map=new HashMap<Integer,Integer>();
+        for(int i=0;i<inorder.length;i++){
+            map.put(inorder[i],i);
+        }
+        return build(preorder,0,0,inorder.length-1,map);
+    }
+    public TreeNode build(int[] preorder,int cur,int start,int end,HashMap<Integer,Integer> map){
+       if(start>end)return null;
+       TreeNode root=new TreeNode(preorder[cur]);
+       int rootloc=map.get(preorder[cur]);
+       root.left=build(preorder,cur+1,start,rootloc-1,map);
+       root.right=build(preorder,cur+rootloc-start+1,rootloc+1,end,map);
+        return root;
+    }
+}
