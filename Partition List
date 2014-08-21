@@ -1,0 +1,42 @@
+Partition List Total Accepted: 15317 Total Submissions: 57508 My Submissions
+Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+
+You should preserve the original relative order of the nodes in each of the two partitions.
+
+For example,
+Given 1->4->3->2->5->2 and x = 3,
+return 1->2->2->4->3->5.
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {//trick: use dummy node to help iteration. anchor node record last node in left part, cursor iterate till end, attantion: move element to different places!
+    public ListNode partition(ListNode head, int x) {
+        if(head==null)return head;
+        ListNode dummy=new ListNode(0);
+        dummy.next=head;
+        ListNode anchor=dummy;
+        while(anchor.next!=null&&anchor.next.val<x)anchor=anchor.next;
+        if(anchor.next==null)return dummy.next;
+        ListNode cur=anchor.next;
+        while(cur.next!=null){
+            if(cur.next.val<x){// very tricky! cannot put cur.next=cur.next.next to end!!! since it copy the object, if temp change, cur will be changed too!
+               ListNode temp=cur.next;
+              cur.next=cur.next.next;
+               temp.next=anchor.next;
+               anchor.next=temp;
+            //   cur.next=cur.next.next;
+               anchor=anchor.next;// move anchor to next, do not move cursor
+            }
+             else cur=cur.next;//move cursor to next, do not move anchor
+        }
+    return dummy.next;}
+}
