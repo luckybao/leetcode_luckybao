@@ -39,7 +39,30 @@ return build(results,S,subresult,0);
  return results;}
 }
 
-//solution two, iterative
+//solution two,recursive, remember to add all!!!
+public class Solution {
+    public List<List<Integer>> subsets(int[] S) {//iterative
+        List<List<Integer>> results=new ArrayList<List<Integer>>();
+   Arrays.sort(S);  
+return build(S,results);
+ }  
+ private List<List<Integer>> build(int[] s,List<List<Integer>> results){
+         List<List<Integer>> res=new ArrayList<List<Integer>>();
+         if(s.length==0){ List<Integer> list=new ArrayList<Integer>();res.add(list);results.addAll(res);return results;}
+             int[] sub=new int[s.length-1];
+             sub=Arrays.copyOf(s, s.length-1);
+             for(List<Integer> temp:build(sub,results)){
+                 List<Integer> list=new ArrayList<Integer>(temp);
+                 list.add(s[s.length-1]);
+                 res.add(list);
+             }
+         results.addAll(res);
+     
+ return results;}
+}
+
+
+//solution three, iterative
 public class Solution {
     public List<List<Integer>> subsets(int[] S) {//iterative
         List<List<Integer>> results=new ArrayList<List<Integer>>();
