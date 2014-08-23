@@ -1,0 +1,63 @@
+Subsets II Total Accepted: 15023 Total Submissions: 55932 My Submissions
+Given a collection of integers that might contain duplicates, S, return all possible subsets.
+
+Note:
+Elements in a subset must be in non-descending order.
+The solution set must not contain duplicate subsets.
+For example,
+If S = [1,2,2], a solution is:
+
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+
+//ATTENTION, LOGIC!!! 
+//RECURSIVE
+public class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] num) {
+    List<List<Integer>> res=new ArrayList<List<Integer>>();
+    List<Integer> list=new ArrayList<Integer>();
+    Arrays.sort(num);
+    return build(num,0,res,list);
+        }
+        private List<List<Integer>> build(int[] num,int index,List<List<Integer>> res,List<Integer> list){
+            res.add(list);
+            for(int i=index;i<num.length;i++){
+                if(i!=index&&num[i]==num[i-1])continue;
+                //if(i==num.length)return res;
+                List<Integer> temp=new ArrayList<Integer>(list);
+                temp.add(num[i]);
+                build(num,i+1,res,temp);
+            }
+       return res; }
+}
+
+//ITERATIVE
+public class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] num) {//when using arraylist, make sure that avoid using "=" but use clear() then addAll function! 
+    Arrays.sort(num);
+        List<List<Integer>> results=new ArrayList<List<Integer>>();
+        List<List<Integer>> preresults=new ArrayList<List<Integer>>();
+        preresults.add(new ArrayList<Integer>());
+        results.addAll(preresults);
+        for(int i=0;i<num.length;i++){
+            List<List<Integer>> tempresults=new ArrayList<List<Integer>>();
+            for(List<Integer> mem:((i>0 && num[i]==num[i-1])?preresults:results)){
+                List<Integer> newmem=new ArrayList<Integer>();
+                newmem.addAll(mem);
+                newmem.add(num[i]);
+                // results.add(newmem);//can not add here , concurrent modification error!!!
+                tempresults.add(newmem);
+            }
+            results.addAll(tempresults);
+            preresults.clear();
+            preresults.addAll(tempresults);
+            // results.addAll(preresults);
+        }
+    return results;}
+}
