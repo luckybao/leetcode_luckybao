@@ -1,0 +1,54 @@
+Count and Say Total Accepted: 13537 Total Submissions: 49727 My Submissions
+The count-and-say sequence is the sequence of integers beginning as follows:
+1, 11, 21, 1211, 111221, ...
+
+1 is read off as "one 1" or 11.
+11 is read off as "two 1s" or 21.
+21 is read off as "one 2, then one 1" or 1211.
+Given an integer n, generate the nth sequence.
+
+Note: The sequence of integers will be represented as a string.
+//solution one
+public class Solution {
+    public String countAndSay(int n) {//stringbuilder initialization, append function
+        if(n<0)return new String();
+        StringBuilder res=new StringBuilder();
+        res.append("1");
+        while(n>1){
+            StringBuilder temp=new StringBuilder();
+            for(int i=0;i<res.length();i++){
+                int count=1;
+            while(i<res.length()-1&&res.charAt(i+1)==res.charAt(i)){count++;i++;}
+                temp.append(count).append(res.charAt(i));
+            }
+            res=temp;
+            n--;
+        }
+    return res.toString();}
+}
+//solutiontwo
+public class Solution {
+    public String countAndSay(int n) {//stringbuilder initialization, append function
+        if(n<0)return new String();
+        StringBuilder res=new StringBuilder();
+        res.append("1");
+        for(int i=1;i<n;i++){
+            String pre=res.toString();
+            StringBuilder temp=new StringBuilder();
+            int count=1,j=1;
+            for(j=1;j<pre.length();j++){
+                if(pre.charAt(j)==pre.charAt(j-1)){
+                    count++;
+                }else{
+                    temp.append(count);
+                    temp.append(pre.charAt(j-1));//record j-1 not j, so we need to fix below
+                    count=1;
+                }
+            }
+            j--;
+                temp.append(count);
+                    temp.append(pre.charAt(j));//record j
+                    res.replace(0,res.length(),temp.toString());//be careful!!!,1. res cannot be modified in the loop; 2. replace is from begin to end-1 index! so USE "res.length()" not "res.length()-1"
+        }
+    return res.toString();}
+}
