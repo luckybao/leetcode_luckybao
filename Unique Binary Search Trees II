@@ -1,0 +1,104 @@
+Unique Binary Search Trees II Total Accepted: 12342 Total Submissions: 45347 My Submissions
+Given n, generate all structurally unique BST's (binary search trees) that store values 1...n.
+
+For example,
+Given n = 3, your program should return all 5 unique BST's shown below.
+
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+   
+   /**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; left = null; right = null; }
+ * }
+ */
+public class Solution {// recursive solution:
+// Given a range [l .. r], if l > r, return a list containing an empty tree.
+// Otherwise, for each value k between l and r, inclusively
+// recursively compute BSTs in range [l .. k-1] and range [k+1 .. r]
+// construct BSTs with root of k, left subtree from BST(1, i-1) and right subtree from BST(i+1, n).
+    public List<TreeNode> generateTrees(int n) {
+        // List<TreeNode> result=new ArrayList<TreeNode>();
+        return helper(1,n);
+    }
+    public List<TreeNode> helper(int l, int r){
+        List<TreeNode> tree=new ArrayList<TreeNode>();
+        if(l>r) tree.add(null);//attention, add null!!!
+        for(int i=l;i<=r;i++){
+            List<TreeNode> lefts=new ArrayList<TreeNode>();
+            List<TreeNode> rights=new ArrayList<TreeNode>();
+            lefts=helper(l,i-1);
+            rights=helper(i+1,r);
+            for(TreeNode left:lefts){
+                for(TreeNode right:rights){
+                   TreeNode root=new TreeNode(i);
+            root.left=left;
+            root.right=right;
+            tree.add(root);   
+                }
+            }
+          
+        }
+        return tree;
+    }
+    
+    
+}
+
+//iterative, sacrifice space for time, not fully understand
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; left = null; right = null; }
+ * }
+ */
+public class Solution {// DP solution:
+public List<TreeNode> generateTrees(int n) {
+ArrayList<ArrayList<TreeNode>> dp=new ArrayList<ArrayList<TreeNode>>();
+List<TreeNode> result=new ArrayList<TreeNode>();
+ArrayList<TreeNode> mem=new ArrayList<TreeNode>();
+mem.add(null);
+dp.add(mem);//dp is the table, just record the structure, all of them are dummies!!! no value! will construct the tree later
+//first construct dp table structure,W(j) = W(0)*W(j-1) + W(1)*W(j-2) + ... + W(j-1)*W(0), time O(n^2), space linear
+for(int i=1;i<=n;i++){
+    ArrayList<TreeNode> newmem=new ArrayList<TreeNode>();
+    for(int j=0;j<i;j++){
+        for(int k=0;k<dp.get(j).size();k++){
+            for(int l=0;l<dp.get(i-j-1).size();l++){
+                TreeNode node=new TreeNode(0);
+                node.left=dp.get(j).get(k);
+                node.right=dp.get(i-j-1).get(l);
+                newmem.add(node);
+            }
+        }
+    }
+    dp.add(newmem);
+}// fill the dp table
+for(int i=0;i<dp.get(n).size();i++){
+    num=1;
+    result.add(fill(dp.get(n).get(i)));
+}
+return result;}
+int num;//helper function, num must be global variable!!!!
+TreeNode fill(TreeNode node){
+    if(node==null) return null;
+    TreeNode left=fill(node.left);
+    TreeNode newnode=new TreeNode(num);
+    num++;
+    newnode.left=left;
+    TreeNode right=fill(node.right);
+    newnode.right=right;
+    return newnode;
+}
+    
+}  
