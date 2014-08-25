@@ -1,0 +1,95 @@
+Trapping Rain Water Total Accepted: 14298 Total Submissions: 49863 My Submissions
+Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.
+
+For example, 
+Given [0,1,0,2,1,0,1,3,2,1,2,1], return 6.
+
+//three solutions
+public class Solution {//easy to implement, two pass, O(n)space, one from beginning, one from back, record left/right max
+    public int trap(int[] A) {
+        if(A.length<=2)return 0;
+        int[] left=new int[A.length-2];
+        int[] right=new int[A.length-2]; 
+        int i,max,sum=0;
+        max=A[0];
+        for(i=1;i<A.length-1;i++){
+            if(A[i]<max)left[i-1]=max;
+            else {
+                left[i-1]=A[i];
+                max=A[i];
+            }
+        }
+        max=A[A.length-1];
+        for(i=A.length-2;i>0;i--){
+            if(A[i]<max)right[i-1]=max;
+            else {
+                right[i-1]=A[i];
+                max=A[i];
+            }
+            sum+=Math.min(left[i-1],right[i-1])-A[i];
+        }
+    return sum;}
+}
+
+//
+public class Solution {//worst case two pass, O(1)space
+    public int trap(int[] A) {
+        if(A.length<=2)return 0;
+       int i=0,sum=0,premax=0,j=A.length-1;//i from beginning, j from back, record the last one that can hold water 
+       while(i<=A.length-1){//find i
+           if(A[i]>0){
+               premax=A[i];
+               break;
+           }
+           i++;
+       }
+       i++;
+       while(j>=2){//find j
+           if(A[j]<=A[j-1])j--;
+           else break;
+       }
+       while(i<j){// one pass find sum, from i to j
+               if(A[i]>=premax){
+                   premax=A[i];
+               }else{
+                   sum+=premax-A[i];
+               }
+           i++;
+       }
+       if(premax>A[j]){//hit j, check back, until hit premax, a little tricky, be careful
+           int lastmax=A[j];
+           i--;
+           while(A[i]<premax){
+               if(A[i]<=lastmax)
+               sum-=premax-lastmax;
+               else{
+                   lastmax=A[i];
+                   sum-=premax-lastmax;
+               }
+               i--;
+           }
+       }
+    return sum;}
+}
+// one point starts from left,another starts from right,and store the level at present,calculate the area of rectangle "all",and remove the area of block "block".It's the answer. cause the min level is higher by (min(A[l],A[r]) - curLevel), the blocks between l and r (include) can all contain more water by (min(A[l],A[r]) - curLevel) (and the blo'cks is minus at variable block)
+public class Solution {//another solution, one pass, O(1)space
+    public int trap(int[] A) {
+        if(A.length<=1) return 0;
+        int l = 0, r = A.length-1,block = 0,all = 0,curlevel = 0;
+        while(A[l]<=0&&l<r)l++;
+        while(A[r]<=0&&l<r)r--;//skip all 0s and negative numbers in two ends
+        while(l<=r)
+        {
+            if(A[l]<A[r]){
+                if(A[l]>curlevel){all += (A[l]-curlevel)*(r-l+1);
+                curlevel = A[l];}
+               block += A[l++]; 
+            }
+            else{
+                if(A[r]>curlevel){all += (A[r]-curlevel)*(r-l+1);
+                curlevel = A[r];}
+               block += A[r--]; 
+            }
+        }
+        return all-block;}
+}
