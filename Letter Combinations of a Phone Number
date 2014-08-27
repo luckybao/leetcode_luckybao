@@ -32,3 +32,35 @@ public class Solution {
         }
     return res;}
 }
+
+//Iterative
+public class Solution {
+    public List<String> letterCombinations(String digits) {//iterative
+       if(digits.length()==0){
+           List<String> res=new ArrayList<String>();
+           res.add("");
+        return res;   
+       } //be careful about  null, its OJ problem, if digits is "", you need output "" instead of null 
+       String[] table={"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+       Queue<String> queue=new LinkedList<String>();
+        int digit=digits.charAt(0)-'0';
+        int n=table[digit].length();
+        for(int j=0;j<n;j++){
+            StringBuilder first=new StringBuilder();
+            //table[digit].substring(j,j+1));
+            // queue.offer(first.toString());}
+            queue.offer(first.append(table[digit].charAt(j)).toString());}
+        for(int i=1;i<digits.length();i++){
+            int size=queue.size();
+            while(size>0){
+          StringBuilder pre=new StringBuilder(queue.poll());
+          digit=digits.charAt(i)-'0';
+        n=table[digit].length();
+        for(int j=0;j<n;j++){
+            StringBuilder cur=new StringBuilder(pre);
+            queue.offer(cur.append(table[digit].charAt(j)).toString());}
+            size--;}
+        }
+        List<String> res = new ArrayList<String>(queue);//from queue to list
+    return res;}
+}
