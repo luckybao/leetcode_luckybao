@@ -1,0 +1,64 @@
+Combinations Total Accepted: 18206 Total Submissions: 60093 My Submissions
+Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
+
+For example,
+If n = 4 and k = 2, a solution is:
+
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
+
+//two solutions, first, recursion
+public class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> res= new ArrayList<List<Integer>>();
+        if(k>n||k<1)return res;
+        List<Integer> list=new ArrayList<Integer>();
+        return build(n,k,1,res,list);
+    }
+    private List<List<Integer>> build(int n, int k,int start,List<List<Integer>> res,List<Integer> list){
+//if(start>n)return res;//attention here!!! cannot use start>n!!!it will result in premature termination!!!
+        if(list.size()==k){
+           List<Integer> temp=new ArrayList<Integer>(list); 
+           res.add(temp);return res;
+        }
+        for(int i=start;i<=n;i++){
+            list.add(i);
+            build(n,k,i+1,res,list);// attention, here the next is i+1, not start+1!!!
+            list.remove(list.size()-1);
+        }
+    return res;}
+}
+
+//iterative
+public class Solution {
+    public List<List<Integer>> combine(int n, int k) {//iterative
+        List<List<Integer>> result= new ArrayList<List<Integer>>();
+        if(k>n||k<=0||n<1)return result;
+            for(int i=1;i<=n;i++)
+            {List<Integer> special= new ArrayList<Integer>();
+                special.add(i);
+                result.add(special);
+            }
+          for(int iter=1;iter<=k;iter++){
+                 if(iter==k)return result;
+        List<List<Integer>> preresult= new ArrayList<List<Integer>>();
+        for(int i=0;i<result.size();i++){
+            for(int j=result.get(i).get(result.get(i).size()-1)+1;j<=n;j++){
+                  List<Integer> member=new ArrayList<Integer>();
+                  for(int jj=0;jj<result.get(i).size();jj++){//very important!!!
+                 member.add(result.get(i).get(jj));}  
+            member.add(j);
+            preresult.add(member);
+            }
+        }
+        result=preresult;
+          }  
+        return result;
+    }
+}
