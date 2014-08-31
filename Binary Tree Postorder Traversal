@@ -1,0 +1,151 @@
+Binary Tree Postorder Traversal Total Accepted: 27800 Total Submissions: 89767 My Submissions
+Given a binary tree, return the postorder traversal of its nodes' values.
+
+For example:
+Given binary tree {1,#,2,3},
+   1
+    \
+     2
+    /
+   3
+return [3,2,1].
+
+Note: Recursive solution is trivial, could you do it iteratively?
+
+//four solutions, one recursion, three iterative: with O(n), O(h), O(1) space, O(n) time
+//solution one, recursive
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> res=new ArrayList<Integer>();
+        if(root==null)return res;
+        res.addAll(postorderTraversal(root.left));
+        res.addAll(postorderTraversal(root.right));
+        res.add(root.val);
+        return res;}
+}
+
+//solution two, O(n) space
+public class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> res=new ArrayList<Integer>();
+        if(root==null)return res;
+        Stack<TreeNode> stack=new Stack<>();
+        Stack<Integer> intstack=new Stack<>();
+        stack.push(root);
+        intstack.push(root.val);
+        TreeNode cur=root;
+        while(cur.right!=null){
+            stack.push(cur.right);
+            intstack.push(cur.right.val);
+            cur=cur.right;
+        }
+        while(!stack.isEmpty()){
+            TreeNode top=stack.pop();
+            cur=top.left;
+             while(cur!=null){
+                stack.push(cur);
+                intstack.push(cur.val);
+                cur=cur.right;
+            }
+            
+        }
+        while(!intstack.isEmpty()){
+            res.add(intstack.pop());
+        }
+        return res;}
+}
+
+//solution three, O(h) space, use a previous cursor to retrieve
+public ArrayList<Integer> postorderTraversal(TreeNode root) {
+    ArrayList<Integer> result = new ArrayList<Integer>();
+    Stack<TreeNode> stack = new Stack<TreeNode>();
+    TreeNode prev = null; // previously traversed node
+    TreeNode curr = root;
+
+    if (root == null) {
+        return result;
+    }
+
+    stack.push(root);
+    while (!stack.empty()) {
+        curr = stack.peek();
+        if (prev == null || prev.left == curr || prev.right == curr) { // traverse down the tree
+            if (curr.left != null) {
+                stack.push(curr.left);
+            } else if (curr.right != null) {
+                stack.push(curr.right);
+            }
+        } else if (curr.left == prev) { // traverse up the tree from the left
+            if (curr.right != null) {
+                stack.push(curr.right);
+            }
+        } else { // traverse up the tree from the right
+            result.add(curr.val);
+            stack.pop();
+        }
+        prev = curr;
+    }
+
+    return result;
+}
+
+//solution three, O(1) space
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {//inorder morris, we need to add a dummy for that, and be careful about reverse part when traversing the right part of the tree 
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        if(root==null)return res;
+        TreeNode dummy=new TreeNode(0);
+        dummy.left=root;
+        TreeNode cur=dummy,pre;
+        while(cur!=null){
+            if(cur.left==null)cur=cur.right;
+            else{
+                pre=cur.left;
+                while(pre.right!=null&&pre.right!=cur)pre=pre.right;
+                if(pre.right==null){
+                    pre.right=cur;cur=cur.left;
+                }else{//pre.right==cur,traverse
+                    reverse(cur.left,pre);
+                    TreeNode temp=pre;
+                    while(temp!=cur.left){
+                        res.add(temp.val);
+                        temp=temp.right;
+                    }
+                    res.add(temp.val);
+                    reverse(pre,cur.left);
+                    pre.right=null;
+                    cur=cur.right;
+                }
+            }
+        }
+return res;}
+public void reverse(TreeNode from, TreeNode to){
+if(from==to)return ;
+TreeNode cur=from,pre=from.right;
+while(cur!=to){
+    TreeNode next=pre.right;
+    pre.right=cur;
+    cur=pre;
+    pre=next;
+}
+}
+}
