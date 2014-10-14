@@ -30,3 +30,22 @@ public class Solution {//run time will be O(n), we just need to filter out all d
             }
     return false;}
 }
+
+、、anothersolution；
+public class Solution {
+    public boolean search(int[] A, int target) {
+        if(A.length==0) return false;
+        int l=0,r=A.length-1,m=0;
+        while(l<=r&&A[l]==A[r]){
+            if(A[l]==target)return true;
+            l++;r--;
+        }
+        while(l<=r){
+            m=(l+r)/2;
+            if(A[l]==target||A[r]==target||A[m]==target)return true;
+            if((A[l]<target&&A[m]>target)||((A[l]>A[m])&&(A[l]<target||A[m]>target)))r=m-1;
+            else if ((A[m]<target&&A[r]>target)||((A[m]>A[r])&&(A[m]<target||A[r]>target)))l=m+1;
+            else return false;
+        }
+    return false;}
+}
