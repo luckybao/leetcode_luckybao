@@ -30,3 +30,26 @@ public class Solution {
 		}
 		return sb.length() == 0 ? "" : sb.substring(0, sb.length() - 1);}
 }
+
+//without splitting, be very careful!!!
+public class Solution {
+    public String reverseWords(String s) {
+        if(s.length()==0)return s;
+        StringBuilder sb=new StringBuilder();
+        ArrayList<String> array=new ArrayList<>();
+        int i=0,count=0,k=0;
+        while(i<s.length()){
+            while(i<s.length()&&s.charAt(i)==' '){i++;}
+             int j=i;
+             while(j<s.length()&&s.charAt(j)!=' '){j++;}
+            if(i!=s.length())array.add(s.substring(i,j));//be very careful of boarder case!!! "i==s.length()"
+            k++;
+            i=j;
+        }
+        for(i=array.size()-1;i>=0;i--){//be careful includes "i==0"
+            sb.append(array.get(i));
+            sb.append(' ');
+        }
+        return sb.length()==0?"":sb.substring(0,sb.length()-1);// be careful about length()!!!
+    }
+}
