@@ -1,0 +1,32 @@
+ public static void main(String[] args) {
+
+		String s1="Googglee";
+		String s2="";
+		String s3="wwwwwhha";
+		String s4="@@microsoft";
+
+		String s11=RLE(s1);
+		String s22=RLE(s2);
+		String s33=RLE(s3);
+		String s44=RLE(s4);
+		System.out.println(s11);
+		System.out.println(s22);
+		System.out.println(s33);
+		System.out.println(s44);
+		
+		//System.out.println(Removeduplicate(s2));
+		//System.out.println(Removeduplicate(s3));
+  }
+  private static String RLE(String s){
+  int len=s.length();
+  if(len<=0)return s;
+  StringBuilder sb=new StringBuilder();
+  int i=0;
+  while(i<len){
+  int counter=1;
+  char c=s.charAt(i);
+  while(i+counter<len&&s.charAt(i+counter)==c)counter++;
+  sb.append(c).append(counter);
+  i=i+counter;
+  }
+  return sb.toString();}
