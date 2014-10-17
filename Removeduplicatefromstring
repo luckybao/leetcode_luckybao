@@ -1,0 +1,40 @@
+public class Removeduplicatefromstring {
+  public static void main(String[] args) {
+
+		String s1="8Googg8lee";
+		String s2="";
+		String s3="amazon?";
+		String s4="@microsoft@";
+
+		String s11=Removeduplicate(s1);
+		String s22=Removeduplicate(s2);
+		String s33=Removeduplicate(s3);
+		String s44=Removeduplicate(s4);
+		System.out.println(s11);
+		System.out.println(s22);
+		System.out.println(s33);
+		System.out.println(s44);
+		
+		//System.out.println(Removeduplicate(s2));//be careful here!!! do not work
+		//System.out.println(Removeduplicate(s3));
+  }
+  private static String Removeduplicate(String s){
+		int len=s.length();
+		if(len<=1)return s;
+		Boolean[] pre=new Boolean[256];
+		for(int i=0;i<pre.length;i++)pre[i]=false;//initialize
+		StringBuilder sb=new StringBuilder();
+		
+		int counter=0;
+		for(int i=0;i<len;i++){
+		//System.out.println(s.charAt(i));
+		//System.out.println(s.charAt(i)-'0');
+			if(pre[s.charAt(i)-'0'])continue;
+			pre[s.charAt(i)-'0']=true;
+			sb.append(s.charAt(i));
+			//counter++;
+			//s.charAt(counter)=s.charAt(i);// cannot change s!!! s is a value, but here is a variable
+		}
+	return sb.toString();}
+	//return s;}
+}
