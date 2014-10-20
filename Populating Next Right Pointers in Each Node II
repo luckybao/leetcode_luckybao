@@ -63,3 +63,38 @@ public class Solution {//neat solution
    }  
  } 
 }
+
+//same logic, by my own, be very careful!
+/**
+ * Definition for binary tree with next pointer.
+ * public class TreeLinkNode {
+ *     int val;
+ *     TreeLinkNode left, right, next;
+ *     TreeLinkNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void connect(TreeLinkNode root) {
+        if(root==null)return;
+        root.next=null;
+        TreeLinkNode cur=root;// a pointer to help!
+        while(true){
+            cur=FillRow(cur);
+            if(cur==null)return;
+        }
+    }
+    private TreeLinkNode FillRow(TreeLinkNode root){
+        TreeLinkNode r=null;
+        while(root!=null&&root.left==null&&root.right==null)root=root.next;
+        if(root==null)return null;
+         r=root.left!=null?root.left:root.right;
+        while(root!=null){
+            if(root.left!=null&&root.right!=null)root.left.next=root.right;
+            TreeLinkNode cur=root.right==null?root.left:root.right;
+            root=root.next;//be careful to move the pointer next!!!
+            while(root!=null&&root.left==null&&root.right==null)root=root.next;
+            if(root==null){cur.next=null;return r;}
+           cur.next=root.left==null?root.right:root.left;
+        }
+    return r;}
+}
