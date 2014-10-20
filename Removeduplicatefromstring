@@ -38,3 +38,14 @@ public class Removeduplicatefromstring {
 	return sb.toString();}
 	//return s;}
 }
+
+//another implementation, without boolean, use method "indexof" in stringbuilder
+public static void removeMultipleOccurrence(final String input) {
+    final StringBuilder result = new StringBuilder();
+    for (int i = 0; i < input.length(); i++) {
+        String currentChar = input.substring(i, i + 1);
+        if (result.indexOf(currentChar) < 0) //if not contained
+            result.append(currentChar);
+    }
+    System.out.println(result);
+}
