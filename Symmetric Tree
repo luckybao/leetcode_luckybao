@@ -78,3 +78,27 @@ public class Solution {
         }
          return true;}
 }
+//another same logic, cleanner code, remember to check null every time!!!
+public class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if(root==null)return true;
+        if(root.left==null&&root.right==null)return true;
+        Queue<TreeNode> q=new LinkedList<TreeNode>();
+        q.offer(root.left);q.offer(root.right);
+        while(!q.isEmpty()){
+            TreeNode l=q.poll();
+            TreeNode r=q.poll();
+            if(check(l,r)){
+                if(l!=null)
+                {q.offer(l.left);q.offer(r.right);q.offer(l.right);q.offer(r.left);}
+            }
+            else return false;
+        }
+    return true;}
+    private boolean check(TreeNode l, TreeNode r){
+        if(l==null&&r==null)return true;
+        if(l==null||r==null)return false;
+        if(l.val==r.val)return true;
+        else return false;
+    }
+}
