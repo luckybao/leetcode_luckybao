@@ -60,7 +60,9 @@ public class Solution {//solution one, merge one by one
  *     }
  * }
  */
-public class Solution {//solution two, priority queue
+public class Solution {//solution two, priority queue,time complexity is also O(nlogk),But the space complexity is quite different:
+In the former solution, we need to keep previous merged lists; while in the latter solution, we only need to keep a k-heap.
+Suppose you are given k infinite streams instead of k lists, the heap solution will be a better choice.
     public ListNode mergeKLists(List<ListNode> lists) {
  if(lists.size()==0)return null;
  if(lists.size()==1)return lists.get(0);
