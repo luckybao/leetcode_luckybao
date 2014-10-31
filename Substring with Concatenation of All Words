@@ -17,7 +17,7 @@ public class Solution {//algorithm from others
 // What is the complexity now?
 // We hit each substring at most twice, one to add into the collection and one to remove from the collection. There are O(n) substrings in total, where n is the total number of characters in string S, and for each substring it takes O(k) = O(1) to check whether it is a valid word or not.
 // So, in total, this algorithm runs in time O(n*k) = O(n).
-   public List<Integer> findSubstring(String S, String[] L) {//try my own
+     public List<Integer> findSubstring(String S, String[] L) {//try my own
    List<Integer> res=new ArrayList<Integer>();
    if(S.length()==0||L.length==0)return res;
    int len=L[0].length(),tlen=L.length;
@@ -25,39 +25,42 @@ public class Solution {//algorithm from others
    for(String w:L){
        add(w,map);
    }
-   for(int i=0;i<len;i++){//like KMP
-       HashMap<String, Integer> cm=new HashMap<String, Integer>();//cm:current map
+   for(int i=0;i<len;i++){
+       HashMap<String, Integer> cm=new HashMap<String, Integer>(map);//cm:current map
        int count=0;
-       for(int j=i,begin=i;begin<=S.length()-tlen*len&&j<=S.length()-(tlen-count)*len;){//j like a runner or end pointer
+       for(int j=i,begin=i;begin<=S.length()-tlen*len&&j<=S.length()-(tlen-count)*len;){
          String sub=S.substring(j,j+len);
          if(!map.containsKey(sub)){
              j+=len;
              begin=j;
              count=0;
-             cm.clear();
-         }else if(cm.containsKey(sub)&&cm.get(sub)>=map.get(sub)){
-             j+=len;begin+=len;
+             cm.putAll(map);
+         }else if(!cm.containsKey(sub)){
+             begin=slidewindow(begin, len,cm,S);
          }else{
-             add(sub,cm);
+             remove(sub,cm);
              count++;
              j+=len;
-                 if(count>=tlen){
+             if(cm.isEmpty()){
                  res.add(begin);
-                 remove(S.substring(begin,begin+len),cm);
-                 begin+=len;
+                 begin=slidewindow(begin,len,cm,S);
                  count--;
              }
          }
        }
    }
    return res;}
-   private void add(String w, HashMap<String, Integer> map){
+   public void add(String w, HashMap<String, Integer> map){
        if(map.containsKey(w)) map.put(w,map.get(w)+1);
        else map.put(w,1);
    }
-   private void remove(String w, HashMap<String, Integer> map){
+   public void remove(String w, HashMap<String, Integer> map){
        if(map.containsKey(w))map.put(w,map.get(w)-1);
        else return;
        if(map.get(w)==0)map.remove(w);
    }
-}
+   public int slidewindow(int begin, int len, HashMap<String, Integer> cm, String S){
+       String s=S.substring(begin,begin+len);
+       add(s,cm);
+       return begin+=len;
+   }
