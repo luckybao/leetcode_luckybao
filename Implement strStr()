@@ -5,6 +5,7 @@ Returns a pointer to the first occurrence of needle in haystack, or null if need
 
 public class Solution { //O(haystack.length())time, O(needle.length())space
    //KMP reference from others: http://blog.csdn.net/v_july_v/article/details/7041827
+   、、http://www.crimx.com/2014/09/07/kmp-algorithm/
     public String strStr(String haystack, String needle) {
         if(haystack.length()<needle.length())return null;
         if(needle.length()==0)return haystack;
