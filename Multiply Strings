@@ -19,7 +19,7 @@ public String multiply(String num1, String num2) {
                 num3[i + j + 1] = product % 10;
                 carry = product / 10;
             }
-            num3[i + j + 1] = carry;// attention here!!!!
+            num3[i] = carry;// attention here!!!!
         }
         StringBuilder sb = new StringBuilder();
         i = 0;
