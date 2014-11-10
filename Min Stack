@@ -1,0 +1,43 @@
+Min Stack Total Accepted: 922 Total Submissions: 5871 My Submissions Question Solution 
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+push(x) -- Push element x onto stack.
+pop() -- Removes the element on top of the stack.
+top() -- Get the top element.
+getMin() -- Retrieve the minimum element in the stack.
+
+class MinStack {
+    Stack<Integer> stack=new Stack<Integer>();  
+    Stack<Integer> minStack=new Stack<Integer>(); 
+
+    public void push(int x) {
+        stack.add(x);  
+            if(x<=getMin()){  
+                minStack.add(x);  
+            }  
+    }
+
+    public void pop() {
+       int temp=stack.pop();  
+        if(temp==getMin()){  
+            minStack.pop();  
+        }  
+       
+    }
+
+    public int top() {
+   if(!stack.isEmpty()) {  
+            return stack.peek();  
+        }else {  
+            return Integer.MAX_VALUE;  
+        } 
+    }
+
+    public int getMin() {
+          if(!minStack.isEmpty()) {  
+            return minStack.peek();  
+        }else {  
+            return Integer.MAX_VALUE;  
+        } 
+    }
+}
