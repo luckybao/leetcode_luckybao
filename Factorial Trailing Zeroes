@@ -1,0 +1,26 @@
+Factorial Trailing Zeroes Total Accepted: 16799 Total Submissions: 61026 My Submissions Question Solution 
+Given an integer n, return the number of trailing zeroes in n!.
+
+Note: Your solution should be in logarithmic time complexity.
+
+public class Solution {//solution one
+    public int trailingZeroes(int n) {
+        if ( n<0 ) return -1;
+        int count = 0;
+        for (long i=5; n/i>=1; i*=5) {//need to be long!!! remember how to write for loop with i*=5
+            count += n / i;
+        }        
+        return count;}
+}
+
+public class Solution {//solution two, prefered solution, use while loop, do not need to use long
+    public int trailingZeroes(int n) {
+        if ( n<0 ) return -1;
+        int count = 0;
+        while(n>0){
+            int next=n/5;
+            count+=next;
+            n=next;
+        }        
+        return count;}
+}
