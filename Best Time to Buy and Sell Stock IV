@@ -1,0 +1,34 @@
+Best Time to Buy and Sell Stock IV Total Accepted: 8657 Total Submissions: 50362 My Submissions Question Solution 
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete at most k transactions.
+
+Note:
+You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+
+//solution one
+public class Solution {
+    //buy and sell to be an array, odd day buy, even day sell
+    //dp[j]=max{dp[j],dp[j-1]+j%2?[1,-1]*prices[i]}, i from 0 to i, j from 0 to 2*k
+    public int maxProfit(int k, int[] prices) {
+        int n=prices.length;
+        if(k==0||n<=1)return 0;
+        if(k*2>=n)return maxtransaction(n, prices);
+        int[] dp=new int[k*2+1];// dp[0] if assist the calculation, so the length is k*2+1, and odd is 1 and even is -1 which is reverse compared with the j%2?[1,-1] 
+        dp[0]=0;
+        for(int i=1;i<dp.length;i++)dp[i]=Integer.MIN_VALUE;
+        for(int i=0;i<n;i++){
+            for(int j=1;j<dp.length;j++){
+                // for(int i=0;i<n;i++){
+                dp[j]=Math.max(dp[j],dp[j-1]+((j%2==0)?1:-1)*prices[i]);//
+            }
+        }
+   return dp[2*k]; }
+    private int maxtransaction(int len, int[] prices){
+        int res=0;
+        for(int i=0;i<len-1;i++){
+            int diff=prices[i+1]-prices[i];
+            if(diff>0)res+=diff;
+        }
+    return res;}
+}
