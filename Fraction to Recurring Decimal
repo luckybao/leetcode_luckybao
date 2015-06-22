@@ -1,0 +1,40 @@
+Fraction to Recurring Decimal Total Accepted: 13219 Total Submissions: 104480 My Submissions Question Solution 
+Given two integers representing the numerator and denominator of a fraction, return the fraction in string format.
+
+If the fractional part is repeating, enclose the repeating part in parentheses.
+
+For example,
+
+Given numerator = 1, denominator = 2, return "0.5".
+Given numerator = 2, denominator = 1, return "2".
+Given numerator = 2, denominator = 3, return "0.(6)".
+
+public class Solution {
+    //note1: may be negative
+    //note2: may have iteration
+    public String fractionToDecimal(int numerator, int denominator) {
+        StringBuilder st=new StringBuilder();
+        if((numerator>0&&denominator<0)||(numerator<0&&denominator>0)) st.append('-');
+        long numm=numerator,denn=denominator;//!!!!
+        long num=Math.abs(numm);//!!!! may be max negative, so use long to avoid overflow!
+        long den=Math.abs(denn);//!!!! may be max negative, so use long to avoid overflow!
+        long part1=num/den;
+        st.append(String.valueOf(part1));
+        long part2=num%den*10;//!!LONG!!!
+        if(part2==0)return st.toString();
+        st.append('.');
+        HashMap<Long,Integer> map=new HashMap<>();
+        while(part2!=0){
+            if(map.containsKey(part2)){
+                int index=map.get(part2);
+                st.insert(index,'(');
+                st.append(')');return st.toString();
+            }
+            else{
+                map.put(part2,st.length());
+                st.append(String.valueOf(part2/den));
+            part2=(part2%den)*10;
+            }
+        }
+    return st.toString();}
+}
