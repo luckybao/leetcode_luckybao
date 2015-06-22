@@ -32,3 +32,36 @@ public class Solution {
         }
     return res;}
 }
+
+//solution two
+public class Solution {
+    //one global, one local 2D dynamic array
+    //global[i][j]: maxprofit of j transaction until ith day
+    //local[i][j]: maxprofit of j transaction until ith day, and sell stock on ith day
+    //global[i][j]=max(local[i][j],global[i-1][j])
+    //local[i][j]=max(global[i-1][j-1]+max[diff,0],local[i-1][j]+diff)
+    public int maxProfit(int k, int[] prices) {
+        int n=prices.length;
+        if(k==0||n<=1)return 0;
+        if(k*2>=n)return maxtransaction(n, prices);
+        int[][] local=new int[n][k+1];
+        int[][] global=new int[n][k+1];
+        local[0][0]=0;global[0][0]=0;
+        for(int i=1;i<n;i++){
+            int diff=prices[0];
+            if(i!=0)diff=prices[i]-prices[i-1];
+            for(int j=1;j<=k;j++){
+                local[i][j]=Math.max(global[i-1][j-1]+Math.max(diff, 0),local[i-1][j]+diff);
+              global[i][j]=Math.max(local[i][j],global[i-1][j]);  
+            }
+        }
+        
+         return global[n-1][k];}
+    private int maxtransaction(int len, int[] prices){
+        int res=0;
+        for(int i=0;i<len-1;i++){
+            int diff=prices[i+1]-prices[i];
+            if(diff>0)res+=diff;
+        }
+    return res;}
+}
