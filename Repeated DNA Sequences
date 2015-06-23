@@ -1,0 +1,37 @@
+Repeated DNA Sequences Total Accepted: 17295 Total Submissions: 89140 My Submissions Question Solution 
+All DNA is composed of a series of nucleotides abbreviated as A, C, G, and T, for example: "ACGAATTCCG". When studying DNA, it is sometimes useful to identify repeated sequences within the DNA.
+
+Write a function to find all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule.
+
+For example,
+
+Given s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT",
+
+Return:
+["AAAAACCCCC", "CCCCCAAAAA"].
+
+public class Solution {
+    //to Void TLE or memory problem, use premap to record ACGT
+    public List<String> findRepeatedDnaSequences(String s) {
+        List<String> res=new ArrayList<>();
+        if(s.length()<=10)return res;
+        HashMap<Character, Integer> premap=new HashMap<>();
+        premap.put('A',0);premap.put('C',1);premap.put('G',2);premap.put('T',3);
+        HashMap<Integer,Boolean> store=new HashMap<>();
+        int mask=0;
+        for(int i=0;i<s.length();i++){
+            if(i<9){
+                mask<<=2;//each letter has 2 bits
+               //0 is 00, 1 is 01, 2 is 10, 3 is 11
+               mask+=premap.get(s.charAt(i)); 
+            }else{
+                mask<<=2;
+               mask+=premap.get(s.charAt(i));
+               mask&=((1<<20)-1);// remember how to retrive the first 20 bits, since 10 letters and each letter has 2 bits
+               //0 is 00, 1 is 01, 2 is 10, 3 is 11
+               if(store.containsKey(mask)&&store.get(mask)){res.add(s.substring(i-9,i+1));store.put(mask,false);}
+               else if(!store.containsKey(mask)) store.put(mask,true);
+            }
+        }
+    return res;}
+}
