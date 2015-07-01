@@ -1,0 +1,78 @@
+Reverse Linked List Total Accepted: 23273 Total Submissions: 73794 My Submissions Question Solution 
+Reverse a singly linked list.
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {//iterative one
+    public ListNode reverseList(ListNode head) {
+        if(head==null||head.next==null)return head;
+        ListNode a,b;
+        a=head;b=head.next;
+        head.next=null;//!!!!remember to set head to tail!
+        while(b!=null){
+            ListNode temp=b.next;
+            b.next=a;
+            a=b;
+            b=temp;
+        }
+    return a;}//solution one return a
+}
+
+//iterative 2
+public class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head==null||head.next==null)return head;
+        ListNode a,b,helper=new ListNode(0);
+        helper.next=head;a=head;b=head.next;
+        head.next=null;
+        while(b!=null){
+            ListNode temp=b.next;
+            b.next=a;
+            a=b;
+            if(temp==null)break;
+            else 
+            b=temp;
+        }
+    return b;}//solution two return b, since b is not null
+}
+//recursive 1
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head==null||head.next==null)return head;
+        ListNode a,b,helper=new ListNode(0);
+        helper.next=head;a=head;b=head.next;
+        head.next=null;
+        return reverse(a,b);
+        }
+    private ListNode reverse(ListNode a,ListNode b){
+        if(b==null)return a;
+        ListNode temp=b.next;
+            b.next=a;
+            a=b;
+            b=temp;
+            return reverse(a,b);
+    }
+}
+//recursive 2,remember 
+public class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head==null||head.next==null)return head;
+        ListNode second=head.next;
+        ListNode rest=reverseList(second);//!!!rest!!!
+        second.next=head;head.next=null;
+    return rest;}
+}
