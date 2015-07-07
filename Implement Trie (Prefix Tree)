@@ -1,0 +1,80 @@
+class TrieNode {
+    // Initialize your data structure here.
+    HashMap<Character, TrieNode> children=new HashMap<>();
+        char val;
+        Boolean isleaf=false;
+    public TrieNode() {}
+        public TrieNode(char c){
+         val=c; 
+        }
+}
+
+public class Trie {
+    private TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    // Inserts a word into the trie.
+    public void insert(String word) {
+        char[] charArray = word.toCharArray();
+        int len=charArray.length;
+        if(len==0)return;
+        TrieNode node=this.root;
+        for(int i=0;i<len;i++){
+            char c=charArray[i];
+            if(node.children.containsKey(c)){
+                node=node.children.get(c);
+            }else{
+                TrieNode temp=new TrieNode(c);
+                node.children.put(c,temp);
+                node=temp;
+            }
+            if(i==len-1)node.isleaf=true;
+        }
+
+    }
+
+    // Returns if the word is in the trie.
+    public boolean search(String word) {
+        char[] charArray = word.toCharArray();
+        int len=charArray.length;
+        if(len==0)return true;
+        TrieNode node=searchhelper(charArray,len);
+        if(node==null)return false;
+    return node.isleaf;//!!!important! only different with "startsWith"
+        
+    }
+Implement Trie (Prefix Tree) Total Accepted: 7917 Total Submissions: 31747 My Submissions Question Solution 
+Implement a trie with insert, search, and startsWith methods.
+
+Note:
+You may assume that all inputs are consist of lowercase letters a-z.
+
+    // Returns if there is any word in the trie
+    // that starts with the given prefix.
+    public boolean startsWith(String prefix) {
+  char[] charArray = prefix.toCharArray();
+        int len=charArray.length;
+        if(len==0)return true;
+        TrieNode node=searchhelper(charArray,len);
+    return node!=null;
+    }
+    
+    public TrieNode searchhelper(char[] prefix,int len){
+        if(this.root==null)return null;
+        TrieNode node=this.root;
+        for(int i=0;i<len;i++){
+            char c=prefix[i];
+            if(node.children.containsKey(c)){
+                node=node.children.get(c);
+            }else return null;
+        }
+    return node;}
+}
+
+// Your Trie object will be instantiated and called as such:
+// Trie trie = new Trie();
+// trie.insert("somestring");
+// trie.search("key");
