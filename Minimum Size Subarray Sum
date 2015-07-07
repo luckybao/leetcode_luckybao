@@ -1,0 +1,28 @@
+Minimum Size Subarray Sum Total Accepted: 8920 Total Submissions: 38695 My Submissions Question Solution 
+Given an array of n positive integers and a positive integer s, find the minimal length of a subarray of which the sum ≥ s. If there isn't one, return 0 instead.
+
+For example, given the array [2,3,1,2,4,3] and s = 7,
+the subarray [4,3] has the minimal length under the problem constraint.
+
+public class Solution {
+//maintain a window, left and right, not contain nums[right] but contain nums[left]
+    public int minSubArrayLen(int s, int[] nums) {
+        int len=nums.length;
+        if(len==0)return 0;
+        int res=0,left=0,right=1,sum=nums[0];
+        while(left<right&&right<=len){
+            if(sum<s){
+                if(right<len){//since right may be out of bound, we need to seperate
+                sum+=nums[right++];
+                }
+                else return res;
+            }
+            else{
+                int temp=right-left;
+                if(res==0)res=temp;//do not forget special case! or it will return 0, always
+            else {res=temp<res?temp:res;}
+                sum-=nums[left];left++;
+            }
+        }
+    return res;}
+}
