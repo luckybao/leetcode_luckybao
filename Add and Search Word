@@ -1,0 +1,77 @@
+Add and Search Word - Data structure design Total Accepted: 5223 Total Submissions: 25302 My Submissions Question Solution 
+Design a data structure that supports the following two operations:
+
+void addWord(word)
+bool search(word)
+search(word) can search a literal word or a regular expression string containing only letters a-z or .. A . means it can represent any one letter.
+
+For example:
+
+addWord("bad")
+addWord("dad")
+addWord("mad")
+search("pad") -> false
+search("bad") -> true
+search(".ad") -> true
+search("b..") -> true
+
+public class WordDictionary {
+private TrieNode root;
+ 
+    public WordDictionary(){
+        root = new TrieNode();
+    }
+    // Adds a word into the data structure.
+    public void addWord(String word) {
+        char[] str=word.toCharArray();
+        TrieNode node=this.root;
+        int l=str.length;
+        for(int i=0;i<l;i++){
+            char c=str[i];
+            if(node.children.containsKey(c)){node=node.children.get(c);}
+            else {TrieNode temp=new TrieNode(c);
+                node.children.put(c,temp);
+                node=temp;
+            }
+        if(i==l-1)node.isleaf=true;}
+    }
+
+    // Returns if the word is in the data structure. A word could
+    // contain the dot character '.' to represent any one letter.
+    public boolean search(String word) {
+        char[] str=word.toCharArray();
+        int l=str.length;
+        if(l==0)return true;
+        return dfs(root, str, 0,l);
+ 
+    }
+ 
+     public boolean dfs(TrieNode node, char[] word, int start,int end) {
+ if(start>=end)return false;
+ char c=word[start];
+ if(node.children.containsKey(c)){
+     if(start==end-1&&node.children.get(c).isleaf)return true;
+     return dfs(node.children.get(c),word,start+1,end);
+ }else if(c=='.'){
+      Boolean result=false;
+     for(char temp:node.children.keySet()){
+         if(start==end-1&&node.children.get(temp).isleaf)return true;
+        
+          if(!result&&dfs(node.children.get(temp), word, start+1,end)){result=true;return true;}
+          
+     }
+ return result;}else {return false;}
+    }
+}
+ class TrieNode{
+    char val;
+    HashMap<Character, TrieNode> children=new HashMap<>();
+    Boolean isleaf=false;
+    public TrieNode(){}
+    public TrieNode(char c){val=c;}
+}
+
+// Your WordDictionary object will be instantiated and called as such:
+// WordDictionary wordDictionary = new WordDictionary();
+// wordDictionary.addWord("word");
+// wordDictionary.search("pattern");
