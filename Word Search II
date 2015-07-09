@@ -1,0 +1,108 @@
+Word Search II Total Accepted: 3683 Total Submissions: 24621 My Submissions Question Solution 
+Given a 2D board and a list of words from the dictionary, find all words in the board.
+
+Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+
+For example,
+Given words = ["oath","pea","eat","rain"] and board =
+
+[
+  ['o','a','a','n'],
+  ['e','t','a','e'],
+  ['i','h','k','r'],
+  ['i','f','l','v']
+]
+Return ["eat","oath"].
+Note:
+You may assume that all inputs are consist of lowercase letters a-z.
+
+click to show hint.
+
+You would need to optimize your backtracking to pass the larger test. Could you stop backtracking earlier?
+
+If the current candidate does not exist in all words' prefix, you could stop backtracking immediately. What kind of data structure could answer such query efficiently? Does a hash table work? Why or why not? How about a Trie? If you would like to learn how to implement a basic trie, please work on this problem: Implement Trie (Prefix Tree) first.
+
+public class Solution {
+    Set<String> res = new HashSet<String>(); //!!! since it may found duplicates, set can help to prevent it
+    public List<String> findWords(char[][] board, String[] words) {
+        
+        int num=words.length,m=board.length,n=board[0].length;
+        Trie trie=new Trie();
+        for(int i=0;i<num;i++){
+            trie.add(words[i]);
+        }
+        boolean[][] mark=new boolean[m][n];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                dfs(trie,"",board,mark,i,j,m,n);
+            }
+        }
+    return new ArrayList<String>(res);}
+    public void dfs(Trie trie, String str, char[][] board, boolean[][] mark,int i, int j,int m, int n){
+
+        if(i<0||i>=m||j<0||j>=n||mark[i][j])return;
+        
+        str+=board[i][j];
+        if(trie.prefix(str)){
+            if(trie.search(str))res.add(str);
+            mark[i][j]=true;
+            dfs(trie,str,board,mark,i-1,j,m,n);
+            dfs(trie,str,board,mark,i+1,j,m,n);
+            dfs(trie,str,board,mark,i,j+1,m,n);
+            dfs(trie,str,board,mark,i,j-1,m,n);
+            mark[i][j]=false;
+        }
+    }
+}
+
+class TrieNode{
+    HashMap<Character, TrieNode> children=new HashMap<>();
+    char val;
+    boolean isleaf;
+    public TrieNode(char c){
+        val=c;
+    }
+    public TrieNode(){}
+}
+class Trie{
+    TrieNode root;
+    public Trie(){root=new TrieNode();}
+    public void add(String word){
+        char[] array=word.toCharArray();
+        int l=array.length;
+        TrieNode node=this.root;
+        for(int i=0;i<l;i++){
+            char c=array[i];
+            if(node.children.containsKey(c)){
+                node=node.children.get(c);
+            }else{
+                TrieNode tmp=new TrieNode(c);
+                node.children.put(c,tmp);
+                node=tmp;
+            }
+            if(i==l-1)node.isleaf=true;
+        }
+    }
+    public boolean search(String word){
+        char[] array=word.toCharArray();
+        int l=array.length;
+        TrieNode node=this.root;
+        for(int i=0;i<l;i++){
+            char c=array[i];
+            if(node.children.containsKey(c)){
+                node=node.children.get(c);
+            }else return false;
+        }
+    return node.isleaf;}
+     public boolean prefix(String word){
+        char[] array=word.toCharArray();
+        int l=array.length;
+        TrieNode node=this.root;
+        for(int i=0;i<l;i++){
+            char c=array[i];
+            if(node.children.containsKey(c)){
+                node=node.children.get(c);
+            }else return false;
+        }
+    return true;}
+}
