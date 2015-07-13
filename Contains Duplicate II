@@ -6,8 +6,8 @@ public class Solution {
         int len=nums.length;
         if(len<=1)return false;
         HashSet<Integer> set=new HashSet<>();
-        for(int i=0;i<=k;i++){
-            if(i==nums.length)break;
+        for(int i=0;i<=k;i++){//should be i<=k, not i<k!!!! because it is differnce, add 1
+            if(i==nums.length)break;//make sure it is less than len!!!
             int tmp=nums[i];
             if(set.contains(tmp))return true;
             set.add(tmp);
