@@ -1,0 +1,73 @@
+The Skyline Problem Total Accepted: 3338 Total Submissions: 20325 My Submissions Question Solution 
+A city's skyline is the outer contour of the silhouette formed by all the buildings in that city when viewed from a distance. Now suppose you are given the locations and height of all the buildings as shown on a cityscape photo (Figure A), write a program to output the skyline formed by these buildings collectively (Figure B).
+
+ Buildings  Skyline Contour
+The geometric information of each building is represented by a triplet of integers [Li, Ri, Hi], where Li and Ri are the x coordinates of the left and right edge of the ith building, respectively, and Hi is its height. It is guaranteed that 0 ≤ Li, Ri ≤ INT_MAX, 0 < Hi ≤ INT_MAX, and Ri - Li > 0. You may assume all buildings are perfect rectangles grounded on an absolutely flat surface at height 0.
+
+For instance, the dimensions of all buildings in Figure A are recorded as: [ [2 9 10], [3 7 15], [5 12 12], [15 20 10], [19 24 8] ] .
+
+The output is a list of "key points" (red dots in Figure B) in the format of [ [x1,y1], [x2, y2], [x3, y3], ... ] that uniquely defines a skyline. A key point is the left endpoint of a horizontal line segment. Note that the last key point, where the rightmost building ends, is merely used to mark the termination of the skyline, and always has zero height. Also, the ground in between any two adjacent buildings should be considered part of the skyline contour.
+
+For instance, the skyline in Figure B should be represented as:[ [2 10], [3 15], [7 12], [12 0], [15 10], [20 8], [24, 0] ].
+
+Notes:
+
+The number of buildings in any input list is guaranteed to be in the range [0, 10000].
+The input list is already sorted in ascending order by the left x position Li.
+The output list must be sorted by the x position.
+There must be no consecutive horizontal lines of equal height in the output skyline. For instance, [...[2 3], [4 5], [7 5], [11 5], [12 7]...] is not acceptable; the three lines of height 5 should be merged into one in the final output as such: [...[2 3], [4 5], [12 7], ...]
+
+//maintain a priorityqueue for height, sort all edges then process with start/end, treat differently
+
+
+public class Solution {
+    public List<int[]> getSkyline(int[][] buildings) {
+        List<int[]> res=new ArrayList<>();
+        int len=buildings.length;
+        if(len==0)return res;
+        List<Edge> edges=new ArrayList<>();
+        for(int i=0;i<len;i++){
+            Edge s=new Edge(buildings[i][0],buildings[i][2],true);
+            Edge e=new Edge(buildings[i][1],buildings[i][2],false);
+            edges.add(s);edges.add(e);
+        }
+        Collections.sort(edges, new Comparator<Edge>(){//comparator!!!
+            public int compare(Edge e1,Edge e2){
+                if(e1.x!=e2.x)return e1.x-e2.x;
+                if(e1.start&&e2.start){return e2.h-e1.h;}//if all is the start edge, the taller one in the front
+                if(!e1.start&&!e2.start){return e1.h-e2.h;}//vice versa
+                return e1.start ? -1 : 1; 
+            }
+        });
+        PriorityQueue<Integer> queue=new PriorityQueue<>(Collections.reverseOrder());//priorityqueue, head is the least element,only record the height, higher one first, so use reverseorder
+        for(Edge edge:edges){
+            if(edge.start){//when edge is start
+                if(queue.isEmpty()||edge.h>queue.peek()){
+                    int[] tmp=new int[2];tmp[0]=edge.x;tmp[1]=edge.h;
+                    res.add(tmp);
+                    
+                }queue.add(edge.h);
+            }else{
+                queue.remove(edge.h);
+                if(queue.isEmpty()){
+                 int[] tmp1=new int[2];tmp1[0]=edge.x;tmp1[1]=0;
+                    res.add(tmp1);   
+                }
+                else{if(edge.h>queue.peek()){//must be an inner turn!!!
+                    int[] tmp2=new int[2];tmp2[0]=edge.x;tmp2[1]=queue.peek();//not edge.h!!
+                    res.add(tmp2);
+                    
+                }}
+            }
+            
+        }
+        
+    return res;}
+    class Edge{
+        int x;int h;
+        boolean start=false;
+        Edge(int i, int j, boolean s){x=i;h=j;start=s;}
+        
+    }
+
+}
