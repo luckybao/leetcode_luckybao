@@ -1,0 +1,53 @@
+Basic Calculator Total Accepted: 6476 Total Submissions: 39782 My Submissions Question Solution 
+Implement a basic calculator to evaluate a simple expression string.
+
+The expression string may contain open ( and closing parentheses ), the plus + or minus sign -, non-negative integers and empty spaces .
+
+You may assume that the given expression is always valid.
+
+Some examples:
+"1 + 1" = 2
+" 2-1 + 2 " = 3
+"(1+(4+5+2)-3)+(6+8)" = 23
+
+public class Solution {
+    //two stacks, one operator, one character
+    public int calculate(String s) {
+        char[] str=s.toCharArray();
+        int l=str.length;
+        Stack<Integer> value=new Stack<>();
+        Stack<Character> op=new Stack<>();
+        int res=0;
+        for(int i=0;i<l;i++){
+            char c=str[i];
+            if(c=='+'||c=='-'||c=='(')op.push(c);
+            else if(c==')'){
+                int sub=0;
+               while(!op.isEmpty()&&op.peek()!='('){
+                 char sign=op.pop();
+               int num=value.pop(); 
+               sub=sign=='+'?sub+num:sub-num;
+               }
+               if(op.isEmpty())continue;
+               op.pop();
+               sub+=value.pop();
+               value.push(sub);//remember to push back!!!!
+            }else if(Character.isDigit(c)){
+                int tmp=0;
+                while(i<l&&Character.isDigit(str[i])){
+                    tmp=tmp*10+Character.getNumericValue(str[i]);
+                    i++;
+                }
+                i--;
+                value.push(tmp);
+            }
+        }
+        while(!op.isEmpty()){
+            char sign=op.pop();
+               int num=value.pop(); 
+               res=sign=='+'?res+num:res-num;
+        }
+        if(!value.isEmpty())res+=value.pop();//value may be one more than the op(first value)
+        return res;}
+        
+}
