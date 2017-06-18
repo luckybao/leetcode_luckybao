@@ -1,0 +1,26 @@
+Given an integer, write a function to determine if it is a power of two.
+//C#
+//Solution 1
+//If a number is power of 2, then the bit format only has a single 1, eg. 10, 100, 10000...., minus 1 will return all 1, union will return 0
+public class Solution {
+    public bool IsPowerOfTwo(int n) {
+        return n>0 && ((n&(n-1))==0);
+    }
+}
+
+//Solution 2
+//Be careful about Edge cases, eg. n == 0 or n ==1
+
+public class Solution {
+    public bool IsPowerOfTwo(int n) {
+        if(n<=0) 
+        return false;
+        while(n>1){
+                    int pre = n>>1;
+                    int next = pre<<1;
+                    if((next-n)==0){
+                    n=n>>1;
+        }else return false;
+        }
+    return true;}
+}
