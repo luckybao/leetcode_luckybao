@@ -16,3 +16,21 @@ public class Solution {//
         }
     return len;}
 }
+
+Python:
+class Solution:
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        ans, start, end = 0, 0, 0
+        Dict = {}
+        for c in s:
+            end += 1
+            Dict[c] = Dict.get(c, 0) + 1
+            while Dict[c] > 1:
+                Dict[s[start]] -=1
+                start +=1
+            ans = max(ans, end - start)
+        return ans
