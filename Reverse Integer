@@ -70,3 +70,20 @@ class Solution {
             res = res*sign;
         return res;}
 }
+
+Python
+class Solution:
+    def reverse(self, x):
+        """
+        :type x: int
+        :rtype: int
+        """
+        sign = 1
+        if x < 0: sign = -1
+        x = abs(x)
+        res = 0
+        while x > 0 :
+            res = res * 10 + x % 10
+            x //= 10
+        if ((sign * res > 2147483647) or (sign * res < -2147483647)): return 0 # Python does not have overflow problem
+        return sign * res 
