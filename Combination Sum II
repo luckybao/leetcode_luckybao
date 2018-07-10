@@ -40,3 +40,24 @@ public class Solution {
         }
     return res;}
 }
+
+
+//Python 3:
+class Solution:
+    def DFS(self, candidates, target, start, result):
+        if len(candidates) == 0 or target < 0: return res
+        if target == 0 and result not in Solution.res : Solution.res.append(result)
+        for i in range(start, len(candidates)):
+            if candidates[i] > target: return result
+            self.DFS(candidates, target - candidates[i], i+1, result + [candidates[i]]) # Note: the main difference is i+1 instead of i compare with Combination Sum
+    
+    def combinationSum2(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        candidates.sort()
+        Solution.res = []
+        self.DFS(candidates, target, 0, [])
+        return Solution.res
