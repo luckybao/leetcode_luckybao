@@ -41,3 +41,25 @@ public class Solution {
  }  
 
 }
+
+Python 3:
+
+class Solution:
+    def DFS(self, candidates, target, start, result):
+        if len(candidates) == 0 : return result
+        if target < 0: return result
+        if target == 0: return Solution.res.append(result)
+        for i in range(start, len(candidates)):
+            if candidates[i] > target: return result
+            self.DFS(candidates, target - candidates[i], i, result+[candidates[i]])
+    
+    def combinationSum(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        candidates.sort()
+        Solution.res = [] #Global Variable
+        self.DFS(candidates, target, 0, [])
+        return Solution.res
