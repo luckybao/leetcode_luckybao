@@ -43,3 +43,23 @@ public List<List<Integer>> dfs(List<List<Integer>> result, int start, int sum, L
     }
 return result;}
 }
+
+Python3:
+class Solution:
+    def DFS(self, k, n, Baselist, start, temp):
+        if (n <  0) or k <0 : return temp
+        if (n==0) and k ==0: Solution.res.append(temp)
+        for i in range(start, len(Baselist)):
+            if(n < Baselist[i]): return temp
+            self.DFS(k-1, n-Baselist[i], Baselist, i+1, temp+[Baselist[i]])
+        
+    def combinationSum3(self, k, n):
+        """
+        :type k: int
+        :type n: int
+        :rtype: List[List[int]]
+        """
+        Baselist =  list(range(1, 10)) 
+        Solution.res=[]
+        self.DFS(k, n, Baselist, 0, [])
+        return Solution.res
