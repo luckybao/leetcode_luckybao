@@ -85,3 +85,37 @@ public Comparator<ListNode> Comparelist = new Comparator<ListNode>(){/// remembe
         }   
 };// this is very important!!! it has ";" at the end for Comparator !!!
 }
+
+Python:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def mergeTwoLists(self, l1, l2):
+        dummy = ListNode(0)
+        cur = dummy
+        while l1 and l2:
+            if l1.val < l2.val:
+                cur.next = l1
+                l1=l1.next
+            else:
+                cur.next = l2
+                l2 = l2.next
+            cur = cur.next
+        if l1 : cur.next = l1
+        else: cur.next = l2
+        return dummy.next
+    
+    def mergeKLists(self, lists):
+        """
+        :type lists: List[ListNode]
+        :rtype: ListNode
+        """
+        if len(lists ) == 0 : return None
+        if len(lists) == 1: return lists[0]
+        l1 = self.mergeKLists(lists[:len(lists)//2])
+        l2 = self.mergeKLists(lists[len(lists)//2:])
+        return self.mergeTwoLists(l1, l2)
