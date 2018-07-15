@@ -33,3 +33,33 @@ public class Solution {
             return dummynode.next;
     }
 }
+
+Python:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def swapPairs(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head == None or head.next == None: return head
+        dummy = ListNode(0)
+        cur  = dummy
+        l1 = head
+        while l1:         
+            if l1.next == None: # When there are Odd number of listnode
+                cur.next = l1
+                return dummy.next
+            cur.next = l1.next
+            l2 = l1.next
+            temp = l2.next
+            l2.next = l1
+            l1.next = temp
+            cur = l1
+            l1 = l1.next
+        return dummy.next
