@@ -22,3 +22,21 @@ public class Solution {
         
     return A.length-count;}
 }
+
+
+Python 3:
+class Solution:
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if len(nums)<=1 : return len(nums)
+        count = 0
+        i = 0
+        while i < (len(nums)):
+            if nums[i] != nums[count]:
+                count +=1
+                nums[i], nums[count] = nums[count], nums[i]
+            i+=1
+        return count+1
