@@ -35,3 +35,29 @@ public class Solution { //O(haystack.length())time, O(needle.length())space
         }
     return null;}
 }
+
+Python:
+class Solution:
+    def strStr(self, haystack, needle):
+        """
+        :type haystack: str
+        :type needle: str
+        :rtype: int
+        """
+        sizen = len(needle) 
+        sizeh = len(haystack)
+        if sizen > len(haystack) : return -1
+        if sizen == 0: return 0
+        if needle == haystack: return 0
+        i = 0
+        while i < sizeh:
+            j = 0
+            temp = i
+            if sizeh - i < sizen: return -1 ## optimization!!
+            while temp < sizeh and j < sizen and haystack[temp] == needle[j]:
+                temp+=1
+                j+=1
+            
+            if j == sizen:return temp-j 
+            i +=1
+        return -1
