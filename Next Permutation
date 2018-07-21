@@ -38,3 +38,28 @@ public class Solution {//check from backward, find the last increasing sequence 
    }  
  }
 }
+
+Python 3:
+#The logic is very smart: http://www.cnblogs.com/zuoyuan/p/3780167.html
+class Solution:
+    def nextPermutation(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        partition = -1
+        l = len(nums)
+        for i in range(l-2, -1, -1):
+            if nums[i+1] > nums[i]:
+                partition = i
+                break
+        if partition == -1 : 
+            nums.reverse()
+            return
+        for i in range(l-1, partition, -1):
+            if nums[i] > nums[partition]:
+                nums[i], nums[partition] = nums[partition] , nums[i]
+                break
+        nums[partition+1:l] = nums[partition+1:l][::-1]
+        
+        
