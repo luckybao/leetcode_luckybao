@@ -59,3 +59,28 @@ public class Solution {
    }  
    return maxLen; }
 }
+
+Python:
+class Solution:
+    def longestValidParentheses(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        l = len(s)
+        res = 0
+        stack = []
+        last = -1 ### there is NO ')'!!!
+        for i in range(l):
+            if s[i] == '(' :
+                stack.append(i)
+            elif s[i] == ')':
+                if stack == []:
+                    last = i
+                else:
+                    stack.pop()
+                    if stack == []:
+                        res = max(res, i-last)
+                    else:
+                        res = max(res, i-stack[len(stack)-1])
+        return res
