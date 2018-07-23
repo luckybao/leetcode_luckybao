@@ -24,3 +24,44 @@ public class Solution {
    return low;
 }
 }
+
+Python:
+class Solution:
+    def searchInsert(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        ln = len(nums)
+        if ln == 0: return 0
+        l = 0
+        r = ln-1
+        while(r-l > 1):
+            mid = (r+l)//2
+            if target == nums[mid]: return mid
+            if target > nums[mid]:
+                l = mid
+            else : r = mid
+        if target > nums[l] and target < nums[r] :
+            return l+1
+        if target == nums[r] : return r
+        if target == nums[l]:return l
+        if target > nums[r]: return r +1
+        return l
+        
+ class Solution:
+    # @param A, a list of integers
+    # @param target, an integer to be inserted
+    # @return integer
+    def searchInsert(self, A, target):
+        left = 0; right = len(A) - 1
+        while left <= right:
+            mid = ( left + right ) / 2
+            if A[mid] < target:
+                left = mid + 1
+            elif A[mid] > target:
+                right = mid - 1
+            else:
+                return mid
+        return left
