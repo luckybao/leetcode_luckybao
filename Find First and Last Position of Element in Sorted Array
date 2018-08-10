@@ -56,7 +56,7 @@ class Solution:
         r = self.findlast(nums, target)
         return [l, r]
 
-Solution 2:
+Solution 2:easy to write, but will need longer run time when there are multiple duplicates for the target value
 class Solution(object):
     def find(self, nums, mid, ln):
         l = mid-1
