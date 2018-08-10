@@ -52,3 +52,25 @@ public class Solution {
         }
     return res.toString();}
 }
+
+//Python: Count and Say
+class Solution:
+    def countAndSay(self, n):
+        """
+        :type n: int
+        :rtype: str
+        """
+        res = '1'
+        for i in range(n-1):
+            count = ''
+            pre = ''
+            newres = ''
+            for j in range(len(res)):
+                if res[j] == pre:
+                    count+=1
+                else:
+                    newres += str(count)+pre
+                    pre = res[j]
+                    count = 1
+            res = newres + str(count)+pre 
+        return res
