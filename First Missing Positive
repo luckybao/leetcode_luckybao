@@ -26,3 +26,19 @@ public class Solution {//counting sort
         while(i<A.length&&A[i]==i+1)i++;
     return i+1;}
 }
+
+Python 3:
+class Solution:
+    def firstMissingPositive(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        ln = len(nums)
+        for i in range(ln):
+            while 0< nums[i] <= ln and nums[i]!=nums[nums[i]-1]:
+                j = nums[i]-1
+                nums[i], nums[j] = nums[j], nums[i]
+        for i in range(ln):
+            if i!=nums[i]-1 : return i+1
+        return ln+1
