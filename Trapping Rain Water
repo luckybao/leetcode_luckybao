@@ -93,3 +93,24 @@ public class Solution {//another solution, one pass, O(1)space
         }
         return all-block;}
 }
+
+//Python3:
+class Solution:
+    def trap(self, height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """        
+        ln = len(height)
+        leftmax = [0 for i in range(ln)]
+        pre = 0
+        for i in range(ln):
+            leftmax[i] = max(pre, height[i]);
+            pre = leftmax[i]
+        res = 0
+        rightmax = 0
+        for i in reversed(range(ln)):
+            rightmax = max(rightmax, height[i])
+            if min(leftmax[i], rightmax)>height[i]:
+                res+= min(leftmax[i], rightmax)-height[i]
+        return res 
