@@ -29,3 +29,34 @@ public String multiply(String num1, String num2) {
     }
     
     
+//Remember to skip 0s at the front:
+class Solution:
+    def multiply(self, num1, num2):
+        """
+        :type num1: str
+        :type num2: str
+        :rtype: str
+        """
+        num1 = num1[::-1]
+        num2 = num2[::-1]
+        ln1 = len(num1)
+        ln2 = len(num2)
+        array = [0 for i in range(ln1+ln2)]
+        for i in range(ln1):
+            for j in range(ln2):
+                array[i+j]+= int(num1[i])*int(num2[j])
+        carry = 0
+        digit = 0
+        res = ''
+        for i in range(ln1+ln2):
+            digit = (array[i])%10
+            carry=array[i]//10
+            if i < ln1+ln2-1:
+                array[i+1] += carry            
+            res=str(digit)+res
+        if carry > 0: res = str(carry) + res
+        i = 0
+        while i < len(res) and res[i]=='0': i+=1
+        if i > 0 and i < len(res) : return res[i:]
+        elif i == 0 : return res
+        return '0'
