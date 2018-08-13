@@ -23,3 +23,15 @@ public class Solution {
         }
     return;}
 }
+
+Python: logic!!!
+class Solution:
+    def rotate(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: void Do not return anything, modify matrix in-place instead.
+        """
+        for i in range(len(matrix)):
+            for j in range(len(matrix)-i-1):
+                matrix[i][j], matrix[len(matrix)-j-1][len(matrix)-i-1] = matrix[len(matrix)-j-1][len(matrix)-i-1],matrix[i][j]
+        matrix.reverse()
