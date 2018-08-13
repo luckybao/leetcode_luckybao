@@ -46,3 +46,19 @@ public class Solution {//another solution, like backtracking
         }
          return result;  }
 }
+
+//Python 3:
+class Solution:
+    def permute(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.permutehelper(nums, res, [])
+        return res
+    def permutehelper(self, nums, res, ele):
+        if len(nums) == 0:
+            res.append(ele)
+        for i in range(len(nums)):
+            self.permutehelper(nums[:i]+nums[i+1:], res, ele+[nums[i]])
