@@ -96,3 +96,24 @@ public class Solution {
      }
     return res;}
 }
+
+//Group anagrams:Python3
+class Solution:
+    def groupAnagrams(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+        dict = {}
+        for word in strs:
+            temp = ''.join(sorted(word))
+            ele = []
+            ele.append(word)
+            if temp in dict:
+                dict[temp] = dict[temp]+ele
+            else:
+                dict[temp] = ele
+        res = []
+        for item in dict:
+            res.append(dict[item])
+        return res
