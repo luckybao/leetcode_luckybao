@@ -43,3 +43,20 @@ return Math.max(Math.max(Maxleft,Maxright),lsum+rsum);
 }
     
 }
+
+//Python 3:
+class Solution:
+    def maxSubArray(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if len(nums)==1:return nums[0]
+        cur = nums[0]
+        res = cur
+        for i in range(1, len(nums)):
+            if cur< 0:
+                cur = 0
+            cur = cur+nums[i]
+            res = max(res, cur)
+        return res
