@@ -50,4 +50,25 @@ long now=(~(row | ldiagonal | rdiagonal))&valid;//find all the position we can f
    }
 }
 
-
+Python 3:
+class Solution:
+    def totalNQueens(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        self.col = [False for i in range(n)]
+        self.diag = [False for i in range(n*2)]
+        self.antidiag = [False for i in range(n*2)]
+        self.count = 0
+        self.dfs(0, n)
+        return self.count
+    def dfs(self, r,n):
+        if r == n:
+            self.count+=1
+        else:
+            for i in range(n):
+                if self.col[i] == False and self.diag[i+r] == False and self.antidiag[n-i+r] == False:
+                    self.col[i] = self.diag[i+r]  = self.antidiag[n-i+r] = True
+                    self.dfs(r+1, n)
+                    self.col[i] = self.diag[i+r]  = self.antidiag[n-i+r] = False
