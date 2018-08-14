@@ -96,3 +96,27 @@ return solve(row,0,0,0, 0);
     }
     
 }
+
+Python 3:
+class Solution:
+    def solveNQueens(self, n):
+        """
+        :type n: int
+        :rtype: List[List[str]]
+        """
+        self.col = [False]*n
+        self.diag = [False]*(2*n)
+        self.antidiag = [False]*(2*n)
+        self.res = []
+        self.dfs(n, 0, [])
+        return self.res
+    def dfs(self, n, r, value):
+        if r == n:          
+            self.res.append(value)
+        else:
+            for i in range(n):
+                if not self.col[i] and not self.diag[i+r] and not self.antidiag[n-i+r]:
+                    self.col[i] = self.diag[i+r] = self.antidiag[n-i+r] = True
+                    s = '.'*n
+                    self.dfs(n, r+1, value+[s[:i]+'Q'+s[i+1:]])
+                    self.col[i] = self.diag[i+r] = self.antidiag[n-i+r] = False
