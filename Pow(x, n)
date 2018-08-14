@@ -12,3 +12,21 @@ public class Solution {
        if((exp&1)==1)res*=x;
         return n>0?res:1/res;}
 }
+
+class Solution:
+    def myPow(self, x, n):
+        """
+        :type x: float
+        :type n: int
+        :rtype: float
+        """
+        if n == 0: return 1
+        count = abs(n)
+        res = 1
+        while count > 0:
+            if count%2 == 1:
+                res *=x
+            x *= x
+            count=count//2       
+        if n<0 : return 1/res
+        return res
