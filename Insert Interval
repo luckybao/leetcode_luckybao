@@ -37,3 +37,37 @@ public class Solution {//elegant solution, change newintervals along the way, on
         res.add(pos,newInterval);
     return res;}
 }
+//Python:
+class Solution:
+    def insert(self, intervals, newInterval):
+        """
+        :type intervals: List[Interval]
+        :type newInterval: Interval
+        :rtype: List[Interval]
+        """
+        res = intervals
+        if len(intervals) == 0: 
+            res.append(newInterval)
+            return res
+        for i in range(len(intervals)):
+            if newInterval.start > intervals[i].end:
+                continue
+            else:
+                start = i
+                while i < len(intervals) and newInterval.end>= intervals[i].start:
+                    i+=1
+                return intervals[:start]+self.merge(intervals[start:i], newInterval)+intervals[i:]
+        if i == len(intervals)-1: res.append(newInterval)
+        return res
+    def merge(self, intervals, newInterval):
+        intervals.append(newInterval)
+        intervals.sort(key=lambda a: a.start)
+        res = []
+        res.append(intervals[0])
+        for i in range(1, len(intervals)):
+            if intervals[i].start <= res[len(res)-1].end:
+                res[len(res)-1].end = max(res[len(res)-1].end, intervals[i].end)
+            else:
+                res.append(intervals[i])
+        return res
+        
