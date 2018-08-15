@@ -37,3 +37,43 @@ public class Solution {
         }
     return result;}
 }
+
+//Python3:
+class Solution:
+    def generateMatrix(self, n):
+        """
+        :type n: int
+        :rtype: List[List[int]]
+        """
+        res = [[0 for i in range(n)] for j in range(n)]
+        direction = 0
+        l = 0
+        r = n-1
+        u = 0
+        d = n-1
+        if n == 0: return res
+        count = 1
+        while l <= r and u <=d :
+            temp = []
+            if direction == 0:
+                for i in range(l, r+1):
+                    res[u][i] = count
+                    count+=1
+                u+=1
+            if direction == 1:
+                for i in range(u, d+1):
+                    res[i][r]= count
+                    count+=1
+                r-=1
+            if direction == 2:
+                for i in range(r, l-1, -1):
+                    res[d][i]= count
+                    count+=1
+                d-=1
+            if direction == 3:
+                for i in range(d, u-1, -1):
+                    res[i][l]= count
+                    count+=1
+                l+=1
+            direction = (direction+1)%4
+        return res
