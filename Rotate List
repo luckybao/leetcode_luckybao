@@ -35,3 +35,34 @@ public class Solution {
    cur.next=null;
    return newhead;}
 }
+
+Python:
+class Solution:
+    def rotateRight(self, head, k):
+        """
+        :type head: ListNode
+        :type k: int
+        :rtype: ListNode
+        """
+        if head ==None or k == 0: return head
+        dummy = ListNode(0)
+        dummy.next =head
+        cur = dummy
+        count = 0
+        while(cur.next != None):
+            cur = cur.next
+            count+=1
+        tail = cur
+        k = k%(count)
+        if k == 0: return head
+        cur = dummy.next
+        count = count-k
+        while(count>1):
+            cur = cur.next
+            count -=1
+        temp = cur.next
+        cur.next = None
+        tail.next = dummy.next
+        dummy.next = temp
+        return dummy.next
+    
